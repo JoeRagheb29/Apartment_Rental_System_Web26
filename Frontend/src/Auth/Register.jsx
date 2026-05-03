@@ -15,7 +15,7 @@ function Register() {
   const [isSubmitting, setSubmitting] = useState(false);
 
   const formFields = [
-    { id: 'fullname', name: 'fullname', label: 'Full Name', type: 'text', required: true },
+    { id: 'name', name: 'name', label: 'Full Name', type: 'text', required: true },
     { id: 'email', name: 'email', label: 'Email', type: 'email', required: true },
     { id: 'password', name: 'password', label: 'Password', type: 'password', required: true },
     { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true },
@@ -30,6 +30,7 @@ function Register() {
   });
 
   const handleSubmit = async (values , { resetForm }) => {
+    console.log("btn clcd")
     try {
       setSubmitting(true);
       // eslint-disable-next-line no-unused-vars
@@ -50,7 +51,7 @@ function Register() {
   return (
     <div className={styles.registerContainer}>
       <Formik
-        initialValues={{ fullname: '', email: '', role: '', password: '', confirmPassword: '' }}
+        initialValues={{ name: '', email: '', role: '', password: '', confirmPassword: '' }}
         onSubmit={handleSubmit}
         validationSchema={YupSchema}
       >
