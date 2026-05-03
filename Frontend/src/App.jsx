@@ -4,7 +4,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Apartments from './pages/Apartments';
 import ApartmentDetails from './pages/ApartmentDetails';
-import Login from './pages/Login';
+import Login from './Auth/Login';
 import Register from './Auth/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
