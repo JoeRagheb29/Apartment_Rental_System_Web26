@@ -2,16 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-
-const authRoutes = require("./routes/authRoutes");
-
+const authRoutes = require("./routes/authroutes");
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/api/auth", authRoutes);
 
 const connectDB = async () => {
@@ -25,4 +22,8 @@ const connectDB = async () => {
 };
 connectDB();
 
-app.listen(5000, () => console.log("Server running"));
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
+app.listen(5000, () => console.log("Server running in http://localhost:5000"));
