@@ -5,8 +5,9 @@ import Home from './pages/Home';
 import Apartments from './pages/Apartments';
 import ApartmentDetails from './pages/ApartmentDetails';
 import Login from './pages/Login';
-import Register from './pages/Register';
+import Register from './Auth/Register';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 import styles from './App.module.css';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </main>
