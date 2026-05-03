@@ -51,6 +51,43 @@
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
+.roleSelector {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.roleButton {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f7f9fc;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  font-weight: 500;
+  color: #555;
+}
+
+.roleButton.active {
+  background-color: #e6f2ff;
+  border-color: #007bff;
+  color: #007bff;
+  font-weight: 600;
+}
+
+.roleButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.error {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
 .submitButton {
   width: 100%;
   padding: 0.9rem;
@@ -69,21 +106,21 @@
 }
 
 .submitButton:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
 }
 
 .loginLink {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #555;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .loginLink a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .loginLink a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
