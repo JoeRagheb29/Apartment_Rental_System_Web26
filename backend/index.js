@@ -14,7 +14,14 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("DB connected"));
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+};
 
 app.listen(5000, () => console.log("Server running"));
