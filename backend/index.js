@@ -23,5 +23,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
+connectDB();
 
 app.listen(5000, () => console.log("Server running"));

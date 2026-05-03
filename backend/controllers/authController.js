@@ -5,7 +5,9 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
+    if (!name || !email || !password) {
+      return res.status(400).json("All fields are required");
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -18,6 +20,7 @@ exports.register = async (req, res) => {
     res.status(201).json(user);
 
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 };
