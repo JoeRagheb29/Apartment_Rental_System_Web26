@@ -10,6 +10,7 @@ const Navbar = () => {
         <li><Link to="/login" className={styles.navLink}>Login</Link></li>
         <li><Link to="/register" className={styles.navLink}>Register</Link></li>
         <li><Link to="/dashboard" className={styles.navLink}>Dashboard</Link></li>
+        <li><Link to="/profile" className={styles.navLink}>Profile</Link></li>
       </ul>
     </nav>
   );
