@@ -1,16 +1,14 @@
 const express = require("express");
+const connectDB = require("./db");
+const apartmentRoutes = require("./Routes/Apartment.route");
+
 const app = express();
 
-const PORT = 5000;
+connectDB();
 
-// middleware
 app.use(express.json());
+app.use("/api/apartments", apartmentRoutes);
 
-// route
-app.get("/", (req, res) => {
-  res.send(`API is running...`);
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port http://localhost:${PORT}`);
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
 });
