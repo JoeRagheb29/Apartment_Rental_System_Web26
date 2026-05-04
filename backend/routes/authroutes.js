@@ -7,8 +7,21 @@ const {
   logout
 } = require("../controllers/authController");
 
-router.post("/register", register);
-router.post("/login", login);
-router.post("/logout", logout);
+router.route("/register")
+  .post(register)
+  .get((req, res) => {
+    res.status(400).json("GET not allowed on /register");
+  });
+
+router.route("/login")
+  .post(login)
+  .get((req, res) => {
+    res.status(400).json("GET not allowed on /login");
+  });
+router.route("/logout")
+.post(logout)
+.get((req,res)=>{
+  res.status(400).json("GET not allowed on /logout");
+})
 
 module.exports = router;
