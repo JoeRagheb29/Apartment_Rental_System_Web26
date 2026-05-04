@@ -14,6 +14,8 @@ exports.register = async (req, res) => {
     else if (!password){
       return res.status(400).json("Password is required");
     }
+    const user = await User.findOne({ email });
+    if(user)res.status(400).json("Email must be unique");
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -52,6 +54,7 @@ exports.login = async (req, res) => {
     res.json("Logged in");
 
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 };
