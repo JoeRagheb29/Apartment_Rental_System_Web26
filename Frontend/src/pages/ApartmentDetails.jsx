@@ -1,9 +1,12 @@
 import styles from './ApartmentDetails.module.css';
+import { useParams } from "react-router-dom";
 
 const ApartmentDetails = () => {
+  const { id } = useParams();
   return (
-    <div className={styles.details}>
-      <h1>Apartment Details Page</h1>
+    <div className="container mt-4">
+      <h2>Apartment Details</h2>
+      <p>Apartment ID: {id}</p>
     </div>
   );
 };

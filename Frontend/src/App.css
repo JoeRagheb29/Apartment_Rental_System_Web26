@@ -1,1 +1,8 @@
-@import "tailwindcss";
+.apartment-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.apartment-card:hover {
+  transform: scale(1.04) translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
