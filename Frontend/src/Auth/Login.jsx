@@ -25,7 +25,7 @@ const LoginPage = () => {
     try {
       console.log('Logging in with:', values);
 
-      const response = await API.post('/api/login', values);
+      const response = await API.post('/api/auth/login', values);
       console.log('response data:', response.data);
 
       alert('Logged in successfully!');
