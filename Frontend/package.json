@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.4",
     "axios": "^1.16.0",
+    "bootstrap": "^5.3.8",
     "formik": "^2.4.9",
     "postcss": "^8.5.13",
     "react": "^19.2.5",
