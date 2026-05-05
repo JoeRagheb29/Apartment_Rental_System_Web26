@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import styles from './Register.module.css';
 import axios from 'axios';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup'
 
@@ -12,26 +12,28 @@ const API = axios.create({
 
 function Register() {
   // const [role, setRole] = useState('');
-  const [isSubmitting, setSubmitting] = useState(false);
+  // const [isSubmitting, setSubmitting] = useState(false);
 
   const formFields = [
-    { id: 'fullname', name: 'fullname', label: 'Full Name', type: 'text', required: true },
+    { id: 'name', name: 'name', label: 'Full Name', type: 'text', required: true },
     { id: 'email', name: 'email', label: 'Email', type: 'email', required: true },
     { id: 'password', name: 'password', label: 'Password', type: 'password', required: true },
     { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true },
   ];
 
   const YupSchema = yup.object().shape({
-    fullname: yup.string().required('Full Name is required'),
+    name: yup.string().required('Full Name is required'),
     email: yup.string().email('Invalid email address').required('Email is required'),
     role: yup.string().required('Select your role'),
     password: yup.string().min(4, 'Password must be at least 4 characters').required('Password is required'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm Password is required'),
   });
 
-  const handleSubmit = async (values , { resetForm }) => {
+  const handleSubmit = async (values , { resetForm , setSubmitting}) => {
+    // console.log("btn clcd")
     try {
-      setSubmitting(true);
+      console.log('User registering');
+      // setSubmitting(true);
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...dataToSubmit } = values;
       const response = await API.post('/api/auth/register', dataToSubmit);
@@ -50,11 +52,11 @@ function Register() {
   return (
     <div className={styles.registerContainer}>
       <Formik
-        initialValues={{ fullname: '', email: '', role: '', password: '', confirmPassword: '' }}
+        initialValues={{ name: '', email: '', role: '', password: '', confirmPassword: '' }}
         onSubmit={handleSubmit}
         validationSchema={YupSchema}
       >
-        {({values , setFieldValue }) => (
+        {({values , setFieldValue , isSubmitting }) => (
         <Form className={styles.registerForm}>
           <h2 className={'text-2xl font-bold mb-4'}>Create Account</h2>
           {
