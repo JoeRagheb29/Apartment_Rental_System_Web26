@@ -1,6 +1,164 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color : rgb(239, 68, 68);
+}
+
 .footer {
-  background-color: #333;
-  color: white;
+  @apply bg-white border-t border-gray-200;
+}
+
+.container {
+  @apply max-w-7xl mx-auto p-12;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 3rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    @apply pt-20;
+  }
+}
+
+.mainContent {
+  @apply grid grid-cols-1 gap-8 mb-12;
+}
+
+@media (min-width: 768px) {
+  .mainContent {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.companyInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.logoIcon {
+  font-size: 1.875rem;
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(to right, rgb(239, 68, 68), rgb(248, 113, 113));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.description {
+  color: rgb(75, 85, 99);
+  margin-bottom: 1rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+  margin-bottom: 1rem;
+}
+
+.linksList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.link {
+  color: rgb(75, 85, 99);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: rgb(239, 68, 68);
+}
+
+
+.bottomFooter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .bottomFooter {
+    flex-direction: row;
+  }
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .footerLinks {
+    justify-content: flex-start;
+  }
+}
+
+.footerLink {
+  color: rgb(75, 85, 99);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerLink:hover {
+  color: rgb(239, 68, 68);
+}
+
+.separator {
+  color: rgb(209, 213, 219);
+}
+
+.languageSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.languageLink {
+  color: rgb(75, 85, 99);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.languageLink:hover {
+  color: rgb(239, 68, 68);
+}
+
+.copyright {
   text-align: center;
-  padding: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgb(229, 231, 235);
+}
+
+.copyrightText {
+  color: rgb(107, 114, 128);
+  font-size: 0.875rem;
 }
