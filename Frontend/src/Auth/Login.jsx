@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './Register.module.css'; // استخدم نفس ملف الـ CSS للاتساق
+import styles from './Auth.module.css';
 import axios from 'axios';
 
 const LoginPage = () => {
@@ -12,13 +12,14 @@ const LoginPage = () => {
   });
 
   const loginFormArr = [
-    { id: 'email', name: 'email', label: 'Email', type: 'email', required: true },
-    { id: 'password', name: 'password', label: 'Password', type: 'password', required: true },
+    { id: 'email', name: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'you@example.com' },
+    { id: 'password', name: 'password', label: 'Password', type: 'password', required: true, placeholder: 'Enter your password' },
   ];
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().min(4, 'Password must be at least 4 characters').required('Password is required'),
+    role: Yup.string().required('Please select your role'),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -30,6 +31,7 @@ const LoginPage = () => {
 
       alert('Logged in successfully!');
 
+      console.log("role from values:", values.role)
       if(values.role === "owner") 
         navigate('/dashboard');
       else if(values.role === "tenant")
@@ -37,6 +39,7 @@ const LoginPage = () => {
 
     } catch (error) {
       console.error(error);
+      alert('Login failed. Please check your credentials.');
     } finally {
       setSubmitting(false);
     }
@@ -51,20 +54,46 @@ const LoginPage = () => {
       >
         {({ isSubmitting }) => (
           <Form className={styles.registerForm}>
-            <h2 className={'text-2xl font-bold mb-4'}>Welcome Back</h2>
-            <p className="mb-6 text-gray-600">Please enter your details</p>
+            <h2 className={styles.title}>Welcome Back</h2>
+            <p style={{marginBottom: '1.5rem', color: 'rgb(107, 114, 128)', fontSize: '0.95rem'}}>
+              Log in to your ApartmentHub account
+            </p>
 
             {loginFormArr.map((field) => (
               <div className={styles.formGroup} key={field.id}>
                 <label htmlFor={field.id}>{field.label}</label>
-                <Field type={field.type} name={field.name} id={field.id} required={field.required} />
+                <Field 
+                  type={field.type} 
+                  name={field.name} 
+                  id={field.id} 
+                  required={field.required}
+                  placeholder={field.placeholder}
+                />
                 <ErrorMessage name={field.name} component="div" className={styles.error} />
               </div>
             ))}
 
-            <button type="submit" 
-              className={styles.submitButton} disabled={isSubmitting}>
-              {isSubmitting ? 'Logging in...' : 'Log In'}
+            <div className={styles.formGroup}>
+              <label htmlFor="role">Select Your Role</label>
+              <Field 
+                as="select" 
+                name="role" 
+                id="role" 
+                className={styles.select}
+              >
+                <option value="">Choose your role...</option>
+                <option value="tenant">🏠 I'm a Tenant</option>
+                <option value="owner">🏢 I'm an Owner</option>
+              </Field>
+              <ErrorMessage name="role" component="div" className={styles.error} />
+            </div>
+
+            <button 
+              type="submit" 
+              className={styles.submitButton} 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? '⏳ Logging in...' : '✓ Log In'}
             </button>
 
             <p className={styles.loginLink}>
