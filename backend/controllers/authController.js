@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if(user)res.status(400).json("Email must be unique");
+    if(user)return res.status(400).json("Email must be unique");
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userHashed = await User.create({

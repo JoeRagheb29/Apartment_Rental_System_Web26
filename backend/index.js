@@ -17,7 +17,9 @@ app.use(cookieParser());
 app.use("/api/apartments", apartmentRoutes);
 app.use("/api/auth", authRoutes);
 
-connectDB();
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 app.get("/", (req, res) => {
   res.send(`API is running...
@@ -28,6 +30,10 @@ app.get("/", (req, res) => {
     `);
 });
 
-app.listen(5000, () => console.log("Server running in http://localhost:5000"));
+if (process.env.NODE_ENV !== "test") {
+  app.listen(5000, () =>
+    console.log("Server running on http://localhost:5000")
+  );
+}
 
 module.exports = app;
