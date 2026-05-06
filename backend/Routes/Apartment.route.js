@@ -2,7 +2,138 @@ const express = require("express");
 const router = express.Router();
 const Apartment = require("../Models/Apartments.Model");
 
+/**
+ * @swagger
+ * tags:
+ *   name: Apartments
+ *   description: Apartment APIs
+ */
 
+/**
+ * @swagger
+ * /api/apartments:
+ *   post:
+ *     summary: Create apartment
+ *     tags: [Apartments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               City:
+ *                 type: string
+ *               NumberOfRooms:
+ *                 type: number
+ *               Area:
+ *                 type: number
+ *               View:
+ *                 type: string
+ *               ApartmentPictures:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               location:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Apartment created
+ */
+
+/**
+ * @swagger
+ * /api/apartments:
+ *   get:
+ *     summary: Get all apartments
+ *     tags: [Apartments]
+ *     responses:
+ *       200:
+ *         description: List of apartments
+ */
+
+/**
+ * @swagger
+ * /api/apartments/{id}:
+ *   get:
+ *     summary: Get apartment by ID
+ *     tags: [Apartments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Apartment data
+ */
+
+/**
+ * @swagger
+ * /api/apartments/{id}:
+ *   put:
+ *     summary: Update apartment
+ *     tags: [Apartments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Updated
+ */
+
+/**
+ * @swagger
+ * /api/apartments/{id}:
+ *   delete:
+ *     summary: Delete apartment
+ *     tags: [Apartments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Deleted
+ */
+
+/**
+ * @swagger
+ * /api/apartments/search:
+ *   get:
+ *     summary: Search by city
+ *     tags: [Apartments]
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Results
+ */
+
+/**
+ * @swagger
+ * /api/apartments/search/rooms:
+ *   get:
+ *     summary: Search by rooms
+ *     tags: [Apartments]
+ *     parameters:
+ *       - in: query
+ *         name: rooms
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Results
+ */
 // SEARCH - Search apartments by city
 router.get("/search", async (req, res) => {
     try {
