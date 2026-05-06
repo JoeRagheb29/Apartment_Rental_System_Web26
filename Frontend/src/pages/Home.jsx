@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import ApartmentCard from "../components/ApartmentCard";
+import './../App.css'
 import img1 from "../assets/apt1.jpeg";
 import img2 from "../assets/apt2.jpeg";
 import img3 from "../assets/apt3.jpeg";
@@ -57,7 +58,8 @@ function Home() {
           <p className="lead">Discover the best apartments for rent in Egypt</p>
 
           <button
-            className="btn btn-primary btn-lg mt-3"
+            className="btn btn-lg mt-3 hover:opacity-80 text-white"
+            style={{ backgroundColor: "var(--primary-color)" }}
             onClick={() => navigate("/apartments")}
           >
             Browse Apartments
