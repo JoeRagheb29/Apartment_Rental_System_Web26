@@ -12,43 +12,34 @@ const Navbar = () => {
 
   return (
     <nav className={styles.navbar}>
-      <ul className={styles.navList}>
-        <li>
-          <Link to="/" className={getLinkClass("/")}>
-            Home
-          </Link>
-        </li>
+      <div className={styles.navContainer}>
+        <Link to="/" className={styles.logo}>
+          <span className={styles.logoIcon}>🏠</span>
+          <span className={styles.logoText}>ApartmentHub</span>
+        </Link>
 
-        <li>
-          <Link to="/apartments" className={getLinkClass("/apartments")}>
-            Apartments
-          </Link>
-        </li>
+        <ul className={styles.navList}>
+          <li><Link to="/" className={getLinkClass("/")}>
+              Home
+            </Link></li>
+          <li><Link to="/apartments" className={getLinkClass("/apartments")}>
+              Apartments
+            </Link></li>
+          <li><Link to="/dashboard" className={getLinkClass("/dashboard")}>
+              Dashboard
+            </Link></li>
+        </ul>
 
-        <li>
-          <Link to="/login" className={getLinkClass("/login")}>
-            Login
-          </Link>
-        </li>
-
-        <li>
-          <Link to="/register" className={getLinkClass("/register")}>
-            Register
-          </Link>
-        </li>
-
-        <li>
-          <Link to="/dashboard" className={getLinkClass("/dashboard")}>
-            Dashboard
-          </Link>
-        </li>
-
-        <li>
+        <div className={styles.navActions}>
           <Link to="/profile" className={getLinkClass("/profile")}>
-            Profile
+            <div className={styles.profileIcon}>👤</div>
           </Link>
-        </li>
-      </ul>
+          <div className={styles.authButtons}>
+            <Link to="/login" className={styles.loginBtn}>Login</Link>
+            <Link to="/register" className={styles.registerBtn}>Register</Link>
+          </div>
+        </div>
+      </div>
     </nav>
   );
 };

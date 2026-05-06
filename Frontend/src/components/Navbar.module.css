@@ -1,17 +1,163 @@
+@import "tailwindcss";
+
 .navbar {
-      background-color: #333;
-      padding: 1rem;
+  @apply bg-gradient-to-r from-white to-gray-100 shadow-md sticky;
+}
+
+.navContainer {
+  @apply max-w-6xl mx-auto flex;
+  @apply justify-between items-center p-4 gap-8;
+}
+
+.logo {
+  @apply flex items-center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e63946;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logoIcon {
+  font-size: 1.8rem;
+}
+
+.logoText {
+  background: linear-gradient(135deg, #e63946 0%, #f77f88 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .navList {
-      list-style: none;
-      display: flex;
-      justify-content: space-around;
-      margin: 0;
-      padding: 0;
+  @apply list-none flex gap-8 m-0 p-0 flex-1 justify-center;
 }
 
 .navLink {
-      color: white;
-      text-decoration: none;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.navLink:hover {
+  color: #e63946;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #e63946;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  width: 100%;
+}
+
+.navLink.active {
+  color: #e63946;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profileIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e63946 0%, #f77f88 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.profileIcon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
+.authButtons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.loginBtn,
+.registerBtn {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.loginBtn {
+  color: #e63946;
+  border: 2px solid #e63946;
+  background: transparent;
+}
+
+.loginBtn:hover {
+  background-color: #e63946;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.registerBtn {
+  background: linear-gradient(135deg, #e63946 0%, #f77f88 100%);
+  color: white;
+  border: 2px solid transparent;
+}
+
+.registerBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
+}
+
+@media (max-width: 768px) {
+  .navContainer {
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .navList {
+    order: 3;
+    width: 100%;
+    gap: 1rem;
+    justify-content: flex-start;
+  }
+
+  .authButtons {
+    gap: 0.5rem;
+  }
+
+  .loginBtn,
+  .registerBtn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
 }
