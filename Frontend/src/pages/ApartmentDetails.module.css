@@ -1,3 +1,139 @@
-.details {
-      padding: 2rem;
+.pageWrapper {
+  padding: 50px 8%;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 250px);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gridItem {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* توزيع الكروت في الجريد */
+.mainImgCard {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 0;
+  position: relative;
+}
+
+.mainImgCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.priceCard {
+  grid-column: span 1;
+  background: linear-gradient(135deg, #E03C31, #ff5e57);
+  color: white;
+}
+
+.priceNumber {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subImgCard {
+  grid-column: span 1;
+  padding: 0;
+}
+
+.subImgCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.specsCard {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.specMini {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.descCard {
+  grid-column: span 1; /* خليه ياخد مساحة كارت واحد أو اتنين حسب الرغبة */
+  justify-content: flex-start;
+}
+
+/* لمسات إضافية */
+.locationTag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 800;
+  color: #E03C31;
+}
+
+.bookBtn {
+  margin-top: auto;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.bookBtn:hover {
+  background: #E03C31;
+}
+
+/* عشان الموبايل */
+@media (max-width: 900px) {
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .mainImgCard, .priceCard, .subImgCard, .specsCard, .descCard {
+    grid-column: span 1;
+  }
+}
+.rentBtn {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.rentBtn:hover {
+  background: #000;
+  transform: scale(1.02);
 }
