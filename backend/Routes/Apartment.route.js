@@ -1,26 +1,38 @@
 const express = require("express");
 const router = express.Router();
 const Apartment = require("../Models/Apartments.Model");
-
+const auth = require("../middleware/verifyToken");     
+const role = require("../middleware/roleMiddleware"); 
 /**
  * @swagger
  * tags:
  *   name: Apartments
- *   description: Apartment APIs
+ *   description: Apartment management APIs (Owner / Tenant system)
  */
 
 /**
  * @swagger
  * /api/apartments:
  *   post:
- *     summary: Create apartment
+ *     summary: Create a new apartment (Owner only)
  *     tags: [Apartments]
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - City
+ *               - NumberOfRooms
+ *               - Area
+ *               - View
+ *               - ApartmentPictures
+ *               - description
+ *               - price
+ *               - location
  *             properties:
  *               City:
  *                 type: string
@@ -42,14 +54,18 @@ const Apartment = require("../Models/Apartments.Model");
  *                 type: string
  *     responses:
  *       201:
- *         description: Apartment created
+ *         description: Apartment created successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (not owner)
  */
 
 /**
  * @swagger
  * /api/apartments:
  *   get:
- *     summary: Get all apartments
+ *     summary: Get all apartments (with owner & tenant populated)
  *     tags: [Apartments]
  *     responses:
  *       200:
@@ -70,29 +86,33 @@ const Apartment = require("../Models/Apartments.Model");
  *           type: string
  *     responses:
  *       200:
- *         description: Apartment data
+ *         description: Apartment found
+ *       404:
+ *         description: Not found
  */
 
 /**
  * @swagger
  * /api/apartments/{id}:
  *   put:
- *     summary: Update apartment
+ *     summary: Update apartment (Owner only)
  *     tags: [Apartments]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *     requestBody:
+ *       required: true
  *     responses:
  *       200:
- *         description: Updated
+ *         description: Updated successfully
  */
 
 /**
  * @swagger
  * /api/apartments/{id}:
  *   delete:
- *     summary: Delete apartment
+ *     summary: Delete apartment (Owner only)
  *     tags: [Apartments]
  *     parameters:
  *       - in: path
@@ -100,14 +120,14 @@ const Apartment = require("../Models/Apartments.Model");
  *         required: true
  *     responses:
  *       200:
- *         description: Deleted
+ *         description: Deleted successfully
  */
 
 /**
  * @swagger
  * /api/apartments/search:
  *   get:
- *     summary: Search by city
+ *     summary: Search apartments by city
  *     tags: [Apartments]
  *     parameters:
  *       - in: query
@@ -116,14 +136,14 @@ const Apartment = require("../Models/Apartments.Model");
  *           type: string
  *     responses:
  *       200:
- *         description: Results
+ *         description: Search results
  */
 
 /**
  * @swagger
  * /api/apartments/search/rooms:
  *   get:
- *     summary: Search by rooms
+ *     summary: Search apartments by number of rooms
  *     tags: [Apartments]
  *     parameters:
  *       - in: query
@@ -132,7 +152,28 @@ const Apartment = require("../Models/Apartments.Model");
  *           type: number
  *     responses:
  *       200:
- *         description: Results
+ *         description: Search results
+ */
+
+/**
+ * @swagger
+ * /api/apartments/{id}/rent:
+ *   post:
+ *     summary: Rent an apartment (Tenant only)
+ *     tags: [Apartments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Apartment rented successfully
+ *       400:
+ *         description: Already rented
+ *       401:
+ *         description: Unauthorized
  */
 // SEARCH - Search apartments by city
 router.get("/search", async (req, res) => {
@@ -157,14 +198,17 @@ router.get("/search/rooms", async (req, res) => {
 });
 
 // CREATE - Add a new apartment
-router.post("/", async (req, res) => {
-    try {
-        const apartment = new Apartment(req.body);
-        await apartment.save();
-        res.status(201).json(apartment);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+router.post("/", auth, role("owner"), async (req, res) => {
+  try {
+    const apartment = await Apartment.create({
+      ...req.body,
+      owner: req.user.id
+    });
+
+    res.status(201).json(apartment);
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
 });
 
 // READ - Get all apartments
@@ -212,6 +256,31 @@ router.delete("/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+router.post("/:id/rent", auth, role("tenant"), async (req, res) => {
+  try {
+    const apartment = await Apartment.findById(req.params.id);
+
+    if (!apartment) return res.status(404).json("Not found");
+
+    if (apartment.tenant) {
+      return res.status(400).json("Already rented");
+    }
+
+    apartment.tenant = req.user.id;
+    await apartment.save();
+
+    res.json(apartment);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+router.get("/", async (req, res) => {
+  const apartments = await Apartment.find()
+    .populate("owner", "name email")
+    .populate("tenant", "name email");
+
+  res.json(apartments);
 });
 
 module.exports = router;

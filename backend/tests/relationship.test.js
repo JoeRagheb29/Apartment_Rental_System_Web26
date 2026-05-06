@@ -1,18 +1,11 @@
 const request = require("supertest");
-const app = require("../index");
+const app = require("../index"); 
 
 require("./setup");
 
 describe("Apartment Endpoints", () => {
 
-  let cookie;
-
-  const user = {
-    name: "Owner",
-    email: "owner@test.com",
-    password: "123456",
-    role: "owner"
-  };
+  let ownerCookie;
 
   const apartmentData = {
     City: "Cairo",
@@ -25,26 +18,29 @@ describe("Apartment Endpoints", () => {
     location: "Zamalek"
   };
 
-  // 🔐 LOGIN BEFORE TESTS
-  beforeAll(async () => {
-    await request(app)
-      .post("/api/auth/register")
-      .send(user);
 
-    const loginRes = await request(app)
+  beforeAll(async () => {
+    await request(app).post("/api/auth/register").send({
+      name: "Owner",
+      email: "owner@test.com",
+      password: "123456",
+      role: "owner"
+    });
+
+    const login = await request(app)
       .post("/api/auth/login")
       .send({
-        email: user.email,
-        password: user.password
+        email: "owner@test.com",
+        password: "123456"
       });
 
-    cookie = loginRes.headers["set-cookie"];
+    ownerCookie = login.headers["set-cookie"];
   });
 
   it("should create apartment", async () => {
     const res = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie) // 🔥 AUTH
+      .set("Cookie", ownerCookie) // 🔥 IMPORTANT
       .send(apartmentData);
 
     expect(res.statusCode).toBe(201);
@@ -54,11 +50,10 @@ describe("Apartment Endpoints", () => {
   it("should get all apartments", async () => {
     await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
-    const res = await request(app)
-      .get("/api/apartments");
+    const res = await request(app).get("/api/apartments");
 
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBe(1);
@@ -67,7 +62,7 @@ describe("Apartment Endpoints", () => {
   it("should get apartment by ID", async () => {
     const create = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
     const res = await request(app)
@@ -79,12 +74,11 @@ describe("Apartment Endpoints", () => {
   it("should update apartment", async () => {
     const create = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
     const res = await request(app)
       .put(`/api/apartments/${create.body._id}`)
-      .set("Cookie", cookie)
       .send({ price: 6000 });
 
     expect(res.statusCode).toBe(200);
@@ -94,12 +88,11 @@ describe("Apartment Endpoints", () => {
   it("should delete apartment", async () => {
     const create = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
     const res = await request(app)
-      .delete(`/api/apartments/${create.body._id}`)
-      .set("Cookie", cookie);
+      .delete(`/api/apartments/${create.body._id}`);
 
     expect(res.statusCode).toBe(200);
   });
@@ -107,7 +100,7 @@ describe("Apartment Endpoints", () => {
   it("should search by city", async () => {
     await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
     const res = await request(app)
@@ -117,10 +110,10 @@ describe("Apartment Endpoints", () => {
     expect(res.body.length).toBe(1);
   });
 
-  it("should include apartment images (image test ✔️)", async () => {
+  it("should include apartment images", async () => {
     const res = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie)
+      .set("Cookie", ownerCookie)
       .send(apartmentData);
 
     expect(res.body.ApartmentPictures.length).toBeGreaterThan(0);
