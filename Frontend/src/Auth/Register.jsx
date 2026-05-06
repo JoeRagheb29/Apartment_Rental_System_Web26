@@ -1,9 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import styles from './Register.module.css';
+import styles from './Auth.module.css';
 import axios from 'axios';
-// import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup'
+import { useNavigate } from 'react-router-dom';
 
 const API = axios.create({
   baseURL: 'http://localhost:5000/',
@@ -11,38 +11,37 @@ const API = axios.create({
 });
 
 function Register() {
-  // const [role, setRole] = useState('');
-  // const [isSubmitting, setSubmitting] = useState(false);
-
+  const navigate = useNavigate();
   const formFields = [
-    { id: 'name', name: 'name', label: 'Full Name', type: 'text', required: true },
-    { id: 'email', name: 'email', label: 'Email', type: 'email', required: true },
-    { id: 'password', name: 'password', label: 'Password', type: 'password', required: true },
-    { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true },
+    { id: 'name', name: 'name', label: 'Full Name', type: 'text', required: true, placeholder: 'Enter your full name' },
+    { id: 'email', name: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'you@example.com' },
+    { id: 'password', name: 'password', label: 'Password', type: 'password', required: true, placeholder: 'Minimum 4 characters' },
+    { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true, placeholder: 'Confirm your password' },
   ];
 
   const YupSchema = yup.object().shape({
     name: yup.string().required('Full Name is required'),
     email: yup.string().email('Invalid email address').required('Email is required'),
-    role: yup.string().required('Select your role'),
+    role: yup.string().required('Please select your role'),
     password: yup.string().min(4, 'Password must be at least 4 characters').required('Password is required'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm Password is required'),
   });
 
   const handleSubmit = async (values , { resetForm , setSubmitting}) => {
-    // console.log("btn clcd")
     try {
       console.log('User registering');
-      // setSubmitting(true);
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...dataToSubmit } = values;
       const response = await API.post('/api/auth/register', dataToSubmit);
 
       console.log('User registered:', response.data);
+      alert('Registration successful! Please log in.');
+      navigate('/login');
       resetForm();
     } 
     catch (error) {
       console.error('Error registering user:', error);
+      alert('Registration failed. Please try again.');
     }
     finally {
       setSubmitting(false);
@@ -58,33 +57,60 @@ function Register() {
       >
         {({values , setFieldValue , isSubmitting }) => (
         <Form className={styles.registerForm}>
-          <h2 className={'text-2xl font-bold mb-4'}>Create Account</h2>
+          <h2 className={styles.title}>Create Account</h2>
+          <p style={{marginBottom: '1.5rem', color: 'rgb(107, 114, 128)', fontSize: '0.95rem'}}>
+            Join ApartmentHub and start your journey
+          </p>
+          
           {
             formFields.map(field => (
               <div className={styles.formGroup} key={field.id}>
                 <label htmlFor={field.id}>{field.label}</label>
-                <Field type={field.type} id={field.id} name={field.id} required={field.required} />
+                <Field 
+                  type={field.type} 
+                  id={field.id} 
+                  name={field.id} 
+                  required={field.required}
+                  placeholder={field.placeholder}
+                />
                 <ErrorMessage name={field.id} component="div" className={styles.error} />
               </div>
             ))
           }
-          <div className={styles.roleSelector}>
-            <button type="button" className={`${styles.roleButton} ${values.role === 'tenant' ? styles.active : ''}`}
-                onClick={() => setFieldValue('role', 'tenant')}>
-                I'm a Tenant
-            </button>
-            <button
-              type="button" className={`${styles.roleButton} ${values.role === 'owner' ? styles.active : ''}`}
-              onClick={() => setFieldValue('role', 'owner')}>
-                I'm an Owner
-            </button>
+          
+          <div style={{marginBottom: '1rem'}}>
+            <label style={{display: 'block', marginBottom: '0.75rem', fontWeight: '600', color: 'rgb(17, 24, 39)', fontSize: '0.95rem'}}>
+              Select Your Role
+            </label>
+            <div className={styles.roleSelector}>
+              <button 
+                type="button" 
+                className={`${styles.roleButton} ${values.role === 'tenant' ? styles.active : ''}`}
+                onClick={() => setFieldValue('role', 'tenant')}
+              >
+                🏠 Tenant
+              </button>
+              <button
+                type="button" 
+                className={`${styles.roleButton} ${values.role === 'owner' ? styles.active : ''}`}
+                onClick={() => setFieldValue('role', 'owner')}
+              >
+                🏢 Owner
+              </button>
+            </div>
             <ErrorMessage name="role" component="div" className={styles.error} />
           </div>
-          <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-            {isSubmitting ? 'Waiting...' : 'Register'}
+          
+          <button 
+            type="submit" 
+            className={styles.submitButton} 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '⏳ Creating Account...' : '✓ Create Account'}
           </button>
+          
           <p className={styles.loginLink}>
-            Already have an account? <Link to="/login">Log in</Link>
+            Already have an account? <Link to="/login">Log in here</Link>
           </p>
         </Form>
         )}
