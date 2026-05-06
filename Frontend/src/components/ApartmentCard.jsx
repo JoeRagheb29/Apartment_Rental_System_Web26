@@ -6,10 +6,10 @@ const ApartmentCard = ({ apartment }) => {
   return (
     <div
       className="card h-100 shadow-sm"
-      onClick={() => navigate(`/apartments/${apartment.id}`)}
+      onClick={() => navigate(`/apartments/${apartment._id}`)}
     >
       <img
-        src={apartment.image}
+        src={apartment.ApartmentPictures[0]}
         className="card-img-top"
         alt="apartment"
         style={{ height: "200px", objectFit: "cover" }}

@@ -1,79 +1,104 @@
-import { useState } from "react";
 import ApartmentCard from "../components/ApartmentCard";
-import img1 from "../assets/apt1.jpeg";
-import img2 from "../assets/apt2.jpeg";
-import img3 from "../assets/apt3.jpeg";
-import img4 from "../assets/apt4.jpeg";
-import img5 from "../assets/apt5.jpeg";
-import img6 from "../assets/apt6.jpeg";
+import { useState , useEffect } from "react";
+import axios from "axios";
 
-const apartments = [
-  {
-    id: 1,
-    title: "Modern Apartment in New Cairo",
-    price: 12000,
-    location: "New Cairo",
-    beds: 3,
-    baths: 2,
-    size: 150,
-    image: img1,
-  },
-  {
-    id: 2,
-    title: "Luxury Flat in Zamalek",
-    price: 20000,
-    location: "Zamalek",
-    beds: 4,
-    baths: 3,
-    size: 220,
-    image: img2,
-  },
-  {
-    id: 3,
-    title: "Cozy Studio in Maadi",
-    price: 8000,
-    location: "Maadi",
-    beds: 1,
-    baths: 1,
-    size: 80,
-    image: img3,
-  },
-  {
-    id: 4,
-    title: "Apartment with Nile View",
-    price: 25000,
-    location: "Garden City",
-    beds: 3,
-    baths: 2,
-    size: 180,
-    image: img4,
-  },
-  {
-    id: 5,
-    title: "Affordable Apartment",
-    price: 6000,
-    location: "Nasr City",
-    beds: 2,
-    baths: 1,
-    size: 100,
-    image: img5,
-  },
-  {
-    id: 6,
-    title: "Premium Apartment in Sheikh Zayed",
-    price: 18000,
-    location: "Sheikh Zayed",
-    beds: 3,
-    baths: 3,
-    size: 200,
-    image: img6,
-  },
-];
+// import img1 from "../assets/apt1.jpeg";
+// import img2 from "../assets/apt2.jpeg";
+// import img3 from "../assets/apt3.jpeg";
+// import img4 from "../assets/apt4.jpeg";
+// import img5 from "../assets/apt5.jpeg";
+// import img6 from "../assets/apt6.jpeg";
+
+// const apartments = [
+//   {
+//     id: 1,
+//     title: "Modern Apartment in New Cairo",
+//     price: 12000,
+//     location: "New Cairo",
+//     beds: 3,
+//     baths: 2,
+//     size: 150,
+//     image: img1,
+//   },
+//   {
+//     id: 2,
+//     title: "Luxury Flat in Zamalek",
+//     price: 20000,
+//     location: "Zamalek",
+//     beds: 4,
+//     baths: 3,
+//     size: 220,
+//     image: img2,
+//   },
+//   {
+//     id: 3,
+//     title: "Cozy Studio in Maadi",
+//     price: 8000,
+//     location: "Maadi",
+//     beds: 1,
+//     baths: 1,
+//     size: 80,
+//     image: img3,
+//   },
+//   {
+//     id: 4,
+//     title: "Apartment with Nile View",
+//     price: 25000,
+//     location: "Garden City",
+//     beds: 3,
+//     baths: 2,
+//     size: 180,
+//     image: img4,
+//   },
+//   {
+//     id: 5,
+//     title: "Affordable Apartment",
+//     price: 6000,
+//     location: "Nasr City",
+//     beds: 2,
+//     baths: 1,
+//     size: 100,
+//     image: img5,
+//   },
+//   {
+//     id: 6,
+//     title: "Premium Apartment in Sheikh Zayed",
+//     price: 18000,
+//     location: "Sheikh Zayed",
+//     beds: 3,
+//     baths: 3,
+//     size: 200,
+//     image: img6,
+//   },
+// ];
 
 function Apartments() {
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [apartments, setApartments] = useState([]);
+
+  const Axios = axios.create({
+    baseURL: "http://localhost:5000/",
+    timeout: 5000,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try 
+      {
+        const response = await Axios.get("/api/apartments/");
+        const Apartments = await response.data;
+        console.log(Apartments);
+        setApartments(Apartments);
+      } catch (error) {
+        console.error("Error fetching apartments:", error);
+      }
+      
+    };
+
+    fetchData();
+  }, []);
 
   const filteredApartments = apartments.filter((apt) => {
     return (
@@ -82,6 +107,8 @@ function Apartments() {
       (maxPrice === "" || apt.price <= Number(maxPrice))
     );
   });
+
+
 
   return (
     <div className="container mt-4 pb-5">

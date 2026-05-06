@@ -13,14 +13,14 @@ const apartmentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true
-  },
-
-  tenant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    default: null
-  }
+    },
+    tenant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null
+    }
 });
+
 const Apartment = mongoose.model("Apartment", apartmentSchema);
 
 module.exports = Apartment;
