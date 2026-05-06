@@ -1,3 +1,70 @@
-.details {
-      padding: 2rem;
+.pageWrapper {
+  padding: 40px 10%; /* زودنا الـ padding عشان الصفحة متبقاش عريضة أوي */
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  display: flex;
+  gap: 30px;
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* تصغير حيز الصور */
+.imageSection {
+  flex: 0.8; /* صغرنا النسبة هنا عشان الصور متبقاش عريضة */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bigImage {
+  width: 100%;
+  height: 300px; /* قللنا الارتفاع */
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.smallImagesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.smallImagesGrid img {
+  width: 100%;
+  height: 100px; /* صور جانبية صغيرة وشيك */
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.smallImagesGrid img:hover {
+  opacity: 0.8;
+}
+
+/* قسم المعلومات */
+.infoSection {
+  flex: 1.2;
+  padding-left: 20px;
+}
+
+.priceText {
+  font-size: 2.5rem; /* صغرنا الخط شوية عشان التوازن */
+  color: #E03C31;
+  font-weight: 800;
+  margin: 10px 0;
+}
+.locationTag {
+  color: #E03C31;
+  background: #fff5f4;
+  padding: 6px 16px;
+  border-radius: 30px;
+  width: fit-content;
+  font-weight: 800; /* خليه 700 أو 800 لخط تخين جداً */
+  font-size: 1rem;   /* ممكن تكبري الحجم شوية كمان */
 }
