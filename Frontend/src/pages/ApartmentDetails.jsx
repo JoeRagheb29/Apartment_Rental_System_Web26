@@ -1,11 +1,12 @@
 import React from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ضيفنا useNavigate
 import styles from './ApartmentDetails.module.css';
 
 const ApartmentDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // عشان نعرف نحول المستخدم لصفحة تانية
 
-  // البيانات التي تظهر في الصفحة
+  // داتا الشقة
   const apartment = {
     price: "15,000",
     location: "Maadi, Cairo",
@@ -18,44 +19,59 @@ const ApartmentDetails = () => {
     ]
   };
 
+  // فنكشن التعامل مع زرار الإيجار
+  const handleRentNow = () => {
+    // هنا بنشيك هل فيه Token في الـ localStorage (معناه إنه عامل Login)
+    const isAuthenticated = localStorage.getItem("userToken"); 
+
+    if (isAuthenticated) {
+      // لو عامل Login، كملي إجراءات الحجز (ممكن تفتحي Modal أو توديه لصفحة دفع)
+      alert("Proceeding to rent apartment: " + id);
+    } else {
+      // لو مش عامل، وديه لصفحة الـ Login
+      alert("Please login first to rent this property!");
+      navigate("/login"); 
+    }
+  };
+
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.mainCard}>
+      <div className={styles.bentoGrid}>
         
-        {/* قسم الصور: حيز صغير ومنظم */}
-        <div className={styles.imageSection}>
-          <img src={apartment.images[0]} alt="Main" className={styles.mainImg} />
-          <div className={styles.thumbGrid}>
-            <img src={apartment.images[1]} alt="Interior 1" />
-            <img src={apartment.images[2]} alt="Interior 2" />
+        <div className={`${styles.gridItem} ${styles.mainImgCard}`}>
+          <img src={apartment.images[0]} alt="Main" />
+          <div className={styles.imgOverlay}>
+            <span className={styles.locationTag}>📍 {apartment.location}</span>
           </div>
         </div>
 
-        
-        <div className={styles.detailsSection}>
-          <span className={styles.locationTag}>📍 {apartment.location}</span>
-          
-          <h1 className={styles.priceDisplay}>
-            {apartment.price} <span className={styles.unit}>EGP / Month</span>
-          </h1>
+        <div className={`${styles.gridItem} ${styles.priceCard}`}>
+          <p className={styles.label}>Monthly Rent</p>
+          <h2 className={styles.priceNumber}>
+            {apartment.price} <small className={styles.currency}>EGP</small>
+          </h2>
+        </div>
 
-          <div className={styles.statsRow}>
-            <div className={styles.statItem}>🛏️ {apartment.specs.beds} Beds</div>
-            <div className={styles.statItem}>🚿 {apartment.specs.baths} Baths</div>
-            <div className={styles.statItem}>📏 {apartment.specs.area} m²</div>
-          </div>
+        <div className={`${styles.gridItem} ${styles.subImgCard}`}>
+          <img src={apartment.images[1]} alt="Interior" />
+        </div>
 
-          <div className={styles.descriptionBox}>
-            <h4>Why this property?</h4>
-            <p>{apartment.description}</p>
-            <ul className={styles.featureList}>
-              <li>✨ High-end Finishing</li>
-              <li>✨ Prime Location</li>
-              <li>✨ Fully Equipped Kitchen</li>
-            </ul>
-          </div>
+        <div className={`${styles.gridItem} ${styles.specsCard}`}>
+          <div className={styles.specMini}><span>🛏️</span> {apartment.specs.beds} Bedrooms</div>
+          <div className={styles.specMini}><span>🚿</span> {apartment.specs.baths} Bathrooms</div>
+          <div className={styles.specMini}><span>📏</span> {apartment.specs.area} m² Area</div>
+        </div>
 
-          <button className={styles.contactBtn}>Contact Agent</button>
+        <div className={styles.gridItem}>
+            <button className={styles.rentBtn} onClick={handleRentNow}>
+                Rent Now
+            </button>
+        </div>
+
+        <div className={`${styles.gridItem} ${styles.descCard}`}>
+          <h4 className={styles.sectionTitle}>Property Highlights</h4>
+          <p className={styles.descriptionText}>{apartment.description}</p>
+          <button className={styles.bookBtn}>Contact Agent</button>
         </div>
 
       </div>
