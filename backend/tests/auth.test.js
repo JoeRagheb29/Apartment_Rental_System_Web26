@@ -72,3 +72,47 @@ describe("Auth Endpoints", () => {
   });
 
 });
+it("should fail login with wrong password", async () => {
+
+  await request(app)
+    .post("/api/auth/register")
+    .send({
+      name: "Test",
+      email: "wrongpass@test.com",
+      password: "123456",
+      role: "tenant"
+    });
+
+  const res = await request(app)
+    .post("/api/auth/login")
+    .send({
+      email: "wrongpass@test.com",
+      password: "wrongpassword"
+    });
+
+  expect(res.statusCode).toBe(400);
+
+});
+it("should fail register duplicate email", async () => {
+
+  await request(app)
+    .post("/api/auth/register")
+    .send({
+      name: "test",
+      email: "duplicate@test.com",
+      password: "123456",
+      role: "owner"
+    });
+
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send({
+      name: "test2",
+      email: "duplicate@test.com",
+      password: "123456",
+      role: "owner"
+    });
+
+  expect(res.statusCode).not.toBe(201);
+
+});

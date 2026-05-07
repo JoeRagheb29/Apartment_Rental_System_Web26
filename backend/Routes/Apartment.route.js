@@ -126,16 +126,6 @@ router.post("/", auth, role("owner"), async (req, res) => {
     res.status(400).json(err.message);
   }
 });
-
-// READ - Get all apartments
-router.get("/", async (req, res) => {
-    try {
-        const apartments = await Apartment.find();
-        res.status(200).json(apartments);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 /**
  * @swagger
  * /api/apartments/{id}:
@@ -183,11 +173,16 @@ router.get("/:id", async (req, res) => {
 // UPDATE - Update an apartment by ID
 router.put("/:id",auth, role("owner"), async (req, res) => {
     try {
-        const apartment = await Apartment.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
+        const apartment = await Apartment.findOneAndUpdate(
+              {
+                 _id: req.params.id,
+                 owner: req.user.id
+             },
+             req.body,
+             {
+               returnDocument: "after"
+         }
+    );
         if (!apartment) return res.status(404).json({ error: "Apartment not found" });
         res.status(200).json(apartment);
     } catch (error) {
@@ -211,7 +206,10 @@ router.put("/:id",auth, role("owner"), async (req, res) => {
 // DELETE - Delete an apartment by ID
 router.delete("/:id", auth, role("owner"),async (req, res) => {
     try {
-        const apartment = await Apartment.findByIdAndDelete(req.params.id);
+        const apartment = await Apartment.findOneAndDelete({
+            _id: req.params.id,
+             owner: req.user.id
+        });
         if (!apartment) return res.status(404).json({ error: "Apartment not found" });
         res.status(200).json({ message: "Apartment deleted successfully" });
     } catch (error) {
@@ -242,13 +240,15 @@ router.delete("/:id", auth, role("owner"),async (req, res) => {
 router.post("/:id/rent", auth, role("tenant"), async (req, res) => {
   try {
     const apartment = await Apartment.findById(req.params.id);
-
+    
     if (!apartment) return res.status(404).json("Not found");
 
     if (apartment.tenant) {
       return res.status(400).json("Already rented");
     }
-
+    if (apartment.owner.toString() === req.user.id) {
+         return res.status(400).json("Owner cannot rent own apartment");
+    }
     apartment.tenant = req.user.id;
     await apartment.save();
 

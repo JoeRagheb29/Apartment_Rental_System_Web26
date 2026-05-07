@@ -13,10 +13,11 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  const collections = await mongoose.connection.db.collections();
 
-  for (let collection of collections) {
-    await collection.deleteMany();
+  const collections = mongoose.connection.collections;
+
+  for (const key in collections) {
+    await collections[key].deleteMany();
   }
 });
 
