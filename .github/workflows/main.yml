@@ -2,19 +2,19 @@ name: Node.js Tests
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
 
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
 
 jobs:
   test:
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
 
     strategy:
       matrix:
@@ -31,15 +31,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm install
-        working-directory: backend
+        run: npm ci
 
-      - name: Create .env file
+      - name: Create .env
         run: |
           echo JWT_SECRET=testsecret >> .env
           echo MONGO_URI=mongodb://localhost:27017/test >> .env
-        working-directory: backend
 
-      - name: Run Jest tests
+      - name: Run tests
         run: npm test
-        working-directory: backend
