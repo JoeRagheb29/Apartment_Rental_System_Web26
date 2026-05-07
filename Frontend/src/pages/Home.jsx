@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Carousel } from "bootstrap";
 import ApartmentCard from "../components/ApartmentCard";
 import "./../App.css";
+
 import img1 from "../assets/apt1.jpeg";
 import img2 from "../assets/apt2.jpeg";
 import img3 from "../assets/apt3.jpeg";
@@ -42,12 +43,13 @@ const featuredApartments = [
 
 function Home() {
   const navigate = useNavigate();
+
   useEffect(() => {
     const carouselElement = document.querySelector("#homeCarousel");
 
     if (carouselElement) {
       new Carousel(carouselElement, {
-        interval: 3000,
+        interval: 1500,
         ride: "carousel",
       });
     }
@@ -57,79 +59,55 @@ function Home() {
     <div>
       <div id="homeCarousel" className="carousel slide carousel-fade">
         <div className="carousel-inner">
-          <div className="carousel-item active">
-            <div
-              className="hero-slide d-flex align-items-center justify-content-center text-center text-white"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${img1})`,
-              }}
-            >
-              <div>
-                <h1 className="fw-bold">Find Your Dream Apartment</h1>
-                <p className="lead">
-                  Discover the best apartments for rent in Egypt
-                </p>
+          <div
+            className="carousel-item active hero-slide"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img1})`,
+            }}
+          ></div>
 
-                <button
-                  className="btn btn-lg mt-3 text-white"
-                  style={{ backgroundColor: "var(--primary-color)" }}
-                  onClick={() => navigate("/apartments")}
-                >
-                  Browse Apartments
-                </button>
-              </div>
-            </div>
-          </div>
+          <div
+            className="carousel-item hero-slide"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img2})`,
+            }}
+          ></div>
 
-          <div className="carousel-item">
-            <div
-              className="hero-slide d-flex align-items-center justify-content-center text-center text-white"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${img2})`,
-              }}
-            >
-              <div>
-                <h1 className="fw-bold">Luxury Apartments</h1>
-                <p className="lead">Modern apartments in premium locations</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="carousel-item">
-            <div
-              className="hero-slide d-flex align-items-center justify-content-center text-center text-white"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${img3})`,
-              }}
-            >
-              <div>
-                <h1 className="fw-bold">Affordable Prices</h1>
-                <p className="lead">Apartments for every budget</p>
-              </div>
-            </div>
-          </div>
+          <div
+            className="carousel-item hero-slide"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img3})`,
+            }}
+          ></div>
         </div>
 
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#homeCarousel"
-          data-bs-slide="prev"
-        >
-          <span className="carousel-control-prev-icon"></span>
-        </button>
+        <div className="hero-content text-white text-center">
+          <h1 className="fw-bold display-3">Find Your Dream Apartment</h1>
 
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#homeCarousel"
-          data-bs-slide="next"
-        >
-          <span className="carousel-control-next-icon"></span>
-        </button>
+          <p className="lead mt-3 mb-4">
+            Discover modern apartments in the best locations in Egypt
+          </p>
+
+          <button
+            className="btn btn-lg px-4 py-2 hero-btn"
+            onClick={() => navigate("/apartments")}
+          >
+            Browse Apartments
+          </button>
+        </div>
       </div>
+
       <div className="container section-space">
-        <h2 className="text-center mb-4">Featured Apartments</h2>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="fw-bold">Featured Apartments</h2>
+
+          <button
+            className="btn btn-outline-dark"
+            onClick={() => navigate("/apartments")}
+          >
+            View All
+          </button>
+        </div>
 
         <div className="row g-4">
           {featuredApartments.map((apt) => (
@@ -140,48 +118,89 @@ function Home() {
         </div>
       </div>
 
-      <div className="container mt-5 mb-5">
-        <h2 className="text-center mb-4">Why Choose Us?</h2>
-
-        <div className="row text-center">
-          <div className="col-md-4">
-            <h5>🏡 Wide Variety</h5>
-            <p>Choose from hundreds of apartments across Egypt</p>
-          </div>
-
-          <div className="col-md-4">
-            <h5>💰 Best Prices</h5>
-            <p>Affordable options for every budget</p>
-          </div>
-
-          <div className="col-md-4">
-            <h5>⚡ Easy Booking</h5>
-            <p>Quick and simple process to find your home</p>
-          </div>
-        </div>
-      </div>
-      <div className="container section-space">
-        <h2 className="text-center mb-5">What Our Clients Say</h2>
+      <div className="container my-5">
+        <h2 className="text-center fw-bold mb-4">Popular Locations</h2>
 
         <div className="row g-4">
           <div className="col-md-4">
-            <div className="card shadow-sm p-4 h-100">
-              <h5>Ahmed</h5>
-              <p>Great apartments and very easy to use website.</p>
+            <div className="card border-0 shadow-sm overflow-hidden">
+              <img
+                src={img1}
+                className="card-img-top"
+                style={{ height: "250px", objectFit: "cover" }}
+              />
+
+              <div className="card-body text-center">
+                <h5 className="fw-bold">New Cairo</h5>
+                <p className="text-muted">Modern apartments and compounds</p>
+              </div>
             </div>
           </div>
 
           <div className="col-md-4">
-            <div className="card shadow-sm p-4 h-100">
-              <h5>Sara</h5>
-              <p>I found my apartment quickly and easily.</p>
+            <div className="card border-0 shadow-sm overflow-hidden">
+              <img
+                src={img2}
+                className="card-img-top"
+                style={{ height: "250px", objectFit: "cover" }}
+              />
+
+              <div className="card-body text-center">
+                <h5 className="fw-bold">Zamalek</h5>
+                <p className="text-muted">
+                  Luxury living in the heart of Cairo
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="col-md-4">
-            <div className="card shadow-sm p-4 h-100">
-              <h5>Omar</h5>
-              <p>Clean design and smooth browsing experience.</p>
+            <div className="card border-0 shadow-sm overflow-hidden">
+              <img
+                src={img3}
+                className="card-img-top"
+                style={{ height: "250px", objectFit: "cover" }}
+              />
+
+              <div className="card-body text-center">
+                <h5 className="fw-bold">Maadi</h5>
+                <p className="text-muted">
+                  Quiet neighborhoods and green streets
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container section-space">
+        <div className="row align-items-center g-5">
+          <div className="col-md-6">
+            <img
+              src={img2}
+              alt="Apartment"
+              className="img-fluid rounded shadow"
+            />
+          </div>
+
+          <div className="col-md-6">
+            <h2 className="fw-bold mb-4">Find Apartments Easily</h2>
+
+            <p className="text-muted mb-4">
+              Browse apartments in different locations with modern designs,
+              affordable prices, and comfortable living spaces.
+            </p>
+
+            <div className="mb-3">
+              <h5>✔ Modern Apartments</h5>
+            </div>
+
+            <div className="mb-3">
+              <h5>✔ Affordable Prices</h5>
+            </div>
+
+            <div className="mb-3">
+              <h5>✔ Best Locations</h5>
             </div>
           </div>
         </div>
