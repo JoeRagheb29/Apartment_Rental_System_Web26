@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       try {
-      //   localStorage.removeItem("user");
+        // localStorage.removeItem("user");
         
 
         const token = localStorage.getItem("userToken");

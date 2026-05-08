@@ -3,32 +3,27 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ApartmentCard from "../components/ApartmentCard";
 import './../App.css'
-import Carousel from "bootstrap/js/dist/carousel";
 
 import img1 from "../assets/apt1.jpeg";
 import img2 from "../assets/apt2.jpeg";
 import img3 from "../assets/apt3.jpeg";
+import Slider from "../components/Slider";
+
 
 function Home() {
   const navigate = useNavigate();
   const [apartments, setApartments] = useState([]);
+  // const [currentSlide, setCurrentSlide] = useState(0);
 
   const Axios = axios.create({
     baseURL: "http://localhost:5000/",
     timeout: 5000,
   });
 
+  const slides = [img1, img2, img3];
+
+
   useEffect(() => {
-
-    const carouselElement = document.querySelector("#homeCarousel");
-
-    if (carouselElement) {
-      new Carousel(carouselElement, {
-        interval: 1500,
-        ride: "carousel",
-      });
-    }
-
     const fetchData = async () => {
       try 
       {
@@ -45,56 +40,14 @@ function Home() {
     fetchData();
   }, []);
 
+
   return (
     <div>
-      <div id="homeCarousel" className="carousel slide carousel-fade">
-        <div className="carousel-inner">
-          <div
-            className="carousel-item active hero-slide"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img1})`,
-            }}
-          ></div>
-
-          <div
-            className="carousel-item hero-slide"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img2})`,
-            }}
-          ></div>
-
-          <div
-            className="carousel-item hero-slide"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${img3})`,
-            }}
-          ></div>
-        </div>
-
-        <div className="hero-content text-white text-center">
-          <h1 className="fw-bold display-3">Find Your Dream Apartment</h1>
-
-          <p className="lead mt-3 mb-4">
-            Discover modern apartments in the best locations in Egypt
-          </p>
-
-          <button
-            className="btn btn-lg px-4 py-2 hero-btn"
-            onClick={() => navigate("/apartments")}
-          >
-            Browse Apartments
-          </button>
-        </div>
-      </div>
-
+      <Slider slides={slides} />      
       <div className="container section-space">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="fw-bold">Featured Apartments</h2>
-
-          <button
-            className="btn btn-outline-dark"
-            onClick={() => navigate("/apartments")}
-          >
+          <button className="btn btn-outline-dark" onClick={() => navigate("/apartments")}>
             View All
           </button>
         </div>

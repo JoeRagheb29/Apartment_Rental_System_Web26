@@ -2,6 +2,8 @@ import { useParams, useNavigate } from "react-router-dom"; // ضيفنا useNavi
 import styles from './ApartmentDetails.module.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useContext } from "react";
+import AuthContext from "../contexts/AuthContext";
 
 const ApartmentDetails = () => {
   const { id } = useParams();
@@ -9,6 +11,7 @@ const ApartmentDetails = () => {
   const [apartment, setApartment] = useState({});
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("fadeIn");
+  const { isLoggedIn } = useContext(AuthContext);
   
   useEffect(() => {
     const Axios = axios.create({
@@ -32,15 +35,15 @@ const ApartmentDetails = () => {
 
 
   const handleRentNow = () => {
-    // هنا بنشيك هل فيه Token في الـ localStorage (معناه إنه عامل Login)
-    const isAuthenticated = localStorage.getItem("userToken"); 
-
-    if (isAuthenticated) 
-    {
+    if (isLoggedIn) {
       alert("Proceeding to rent apartment: " + id);
     } else {
-      alert("Please login first to rent this property!");
-      navigate("/login"); 
+      (
+        <div className="alert alert-warning" role="alert">
+          A simple warning alert—check it out!
+        </div>
+      )
+      navigate("/login");
     }
   };
 
