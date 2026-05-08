@@ -3,9 +3,13 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Auth.module.css';
 import axios from 'axios';
+import { useContext } from 'react';
+import AuthContext from '../contexts/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { handleLogin } = useContext(AuthContext);
+  
   const API = axios.create({
     baseURL: 'http://localhost:5000/',
     timeout: 1000,
@@ -26,8 +30,16 @@ const LoginPage = () => {
     try {
       console.log('Logging in with:', values);
 
+
+      // respone data is just = logged innnnn (cant get user data)
       const response = await API.post('/api/auth/login', values);
       console.log('response data:', response.data);
+
+      // Store user data and token in context and localStorage
+      const { token, user } = response.data;
+      console.log("user from response:", user);
+      console.log("token from response:", token);
+      handleLogin(user, token);
 
       alert('Logged in successfully!');
 

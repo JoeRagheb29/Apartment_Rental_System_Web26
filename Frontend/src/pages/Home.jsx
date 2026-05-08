@@ -1,45 +1,34 @@
+import { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import ApartmentCard from "../components/ApartmentCard";
 import './../App.css'
-import img1 from "../assets/apt1.jpeg";
-import img2 from "../assets/apt2.jpeg";
-import img3 from "../assets/apt3.jpeg";
-
-const featuredApartments = [
-  {
-    id: 1,
-    title: "Modern Apartment in New Cairo",
-    price: 12000,
-    location: "New Cairo",
-    beds: 3,
-    baths: 2,
-    size: 150,
-    image: img1,
-  },
-  {
-    id: 2,
-    title: "Luxury Flat in Zamalek",
-    price: 20000,
-    location: "Zamalek",
-    beds: 4,
-    baths: 3,
-    size: 220,
-    image: img2,
-  },
-  {
-    id: 3,
-    title: "Cozy Studio in Maadi",
-    price: 8000,
-    location: "Maadi",
-    beds: 1,
-    baths: 1,
-    size: 80,
-    image: img3,
-  },
-];
 
 function Home() {
   const navigate = useNavigate();
+  const [apartments, setApartments] = useState([]);
+
+  const Axios = axios.create({
+    baseURL: "http://localhost:5000/",
+    timeout: 5000,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try 
+      {
+        const response = await Axios.get("/api/apartments/");
+        const Apartments = await response.data;
+        console.log(Apartments);
+        setApartments(Apartments);
+      } catch (error) {
+        console.error("Error fetching apartments:", error);
+      }
+      
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -70,8 +59,8 @@ function Home() {
         <h2 className="text-center mb-4">Featured Apartments</h2>
 
         <div className="row g-4">
-          {featuredApartments.map((apt) => (
-            <div key={apt.id} className="col-md-4">
+          {apartments.map((apt) => (
+            <div key={apt._id} className="col-md-4">
               <ApartmentCard apartment={apt} />
             </div>
           ))}
@@ -103,3 +92,39 @@ function Home() {
 }
 
 export default Home;
+// import img1 from "../assets/apt1.jpeg";
+// import img2 from "../assets/apt2.jpeg";
+// import img3 from "../assets/apt3.jpeg";
+
+// const featuredApartments = [
+//   {
+//     id: 1,
+//     title: "Modern Apartment in New Cairo",
+//     price: 12000,
+//     location: "New Cairo",
+//     beds: 3,
+//     baths: 2,
+//     size: 150,
+//     image: img1,
+//   },
+//   {
+//     id: 2,
+//     title: "Luxury Flat in Zamalek",
+//     price: 20000,
+//     location: "Zamalek",
+//     beds: 4,
+//     baths: 3,
+//     size: 220,
+//     image: img2,
+//   },
+//   {
+//     id: 3,
+//     title: "Cozy Studio in Maadi",
+//     price: 8000,
+//     location: "Maadi",
+//     beds: 1,
+//     baths: 1,
+//     size: 80,
+//     image: img3,
+//   },
+// ];

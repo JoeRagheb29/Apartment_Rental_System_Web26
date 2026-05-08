@@ -1,3 +1,257 @@
-.details {
-      padding: 2rem;
+.pageWrapper {
+  padding: 50px 8%;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 250px);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gridItem {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* توزيع الكروت في الجريد */
+.mainImgCard {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 0;
+  position: relative;
+}
+
+.mainImgCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.priceCard {
+  grid-column: span 1;
+  background: linear-gradient(135deg, #E03C31, #ff5e57);
+  color: white;
+}
+
+.priceNumber {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subImgCard {
+  grid-column: span 1;
+  padding: 0;
+}
+
+.subImgCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.specsCard {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.specMini {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.descCard {
+  grid-column: span 1;
+  /* خليه ياخد مساحة كارت واحد أو اتنين حسب الرغبة */
+  justify-content: flex-start;
+}
+
+/* لمسات إضافية */
+.locationTag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 800;
+  color: #E03C31;
+}
+
+.bookBtn {
+  margin-top: auto;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.bookBtn:hover {
+  background: #E03C31;
+}
+
+/* عشان الموبايل */
+@media (max-width: 900px) {
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .mainImgCard,
+  .priceCard,
+  .subImgCard,
+  .specsCard,
+  .descCard {
+    grid-column: span 1;
+  }
+}
+
+.rentBtn {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.rentBtn:hover {
+  background: #000;
+  transform: scale(1.02);
+}
+
+/* Image Navigation Buttons */
+.imgNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 10;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.imgNavBtn:hover {
+  background: rgba(255, 255, 255, 1);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.imgNavBtnPrev {
+  left: 15px;
+}
+
+.imgNavBtnNext {
+  right: 15px;
+}
+
+/* Image Counter */
+.imgCounter {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+/* Main Image */
+.mainImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Smooth Fade-In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide In From Left Animation */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In From Right Animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* City Label */
+.cityLabel {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+/* City Title */
+.cityTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 15px 0;
+  color: white;
+}
+
+/* No Images Message */
+.noImagesMsg {
+  text-align: center;
+  color: #999;
 }

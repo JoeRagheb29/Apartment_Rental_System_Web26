@@ -1,3 +1,508 @@
 .dashboard {
       padding: 2rem;
+      background: linear-gradient(135deg, rgb(255, 255, 255) 0%, rgb(248, 248, 248) 100%);
+      min-height: 100vh;
+}
+
+.dashboardHeader {
+      margin-bottom: 3rem;
+      border-bottom: 2px solid rgb(239, 68, 68);
+      padding-bottom: 1.5rem;
+}
+
+.dashboardTitle {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: rgb(31, 41, 55);
+      margin: 0;
+}
+
+.statsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      justify-content: center;
+}
+
+.statCard {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid rgb(239, 68, 68);
+      transition: all 0.3s ease;
+}
+
+.statCard:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.statLabel {
+      font-size: 0.875rem;
+      color: rgb(107, 114, 128);
+      margin: 0 0 0.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+}
+
+.statValue {
+      font-size: 2rem;
+      font-weight: 700;
+      color: rgb(31, 41, 55);
+      margin: 0;
+}
+
+.sectionHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+}
+
+.sectionTitle {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0;
+}
+
+.addBtn {
+      background: linear-gradient(135deg, rgb(239, 68, 68) 0%, rgb(248, 113, 113) 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.addBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.addBtn:active {
+      transform: translateY(0);
+}
+
+.apartmentGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+}
+
+.apartmentCard {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+}
+
+.apartmentCard:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.apartmentImage {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgb(239, 68, 68, 0.1) 0%, rgb(248, 113, 113, 0.1) 100%);
+}
+
+.apartmentCardBody {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+}
+
+.apartmentTitle {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0 0 0.5rem 0;
+      line-height: 1.4;
+}
+
+.apartmentLocation {
+      font-size: 0.875rem;
+      color: rgb(107, 114, 128);
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+}
+
+.apartmentDetails {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+      padding: 1rem 0;
+      border-top: 1px solid rgb(229, 231, 235);
+      border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.detailItem {
+      text-align: center;
+}
+
+.detailLabel {
+      font-size: 0.75rem;
+      color: rgb(107, 114, 128);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 0.25rem 0;
+}
+
+.detailValue {
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0;
+}
+
+.apartmentPrice {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: rgb(239, 68, 68);
+      margin: 1rem 0 0 0;
+}
+
+.cardActions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+}
+
+.actionBtn {
+      flex: 1;
+      padding: 0.625rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+}
+
+.editBtn {
+      background: rgb(59, 130, 246);
+      color: white;
+}
+
+.editBtn:hover {
+      background: rgb(37, 99, 235);
+      transform: translateY(-2px);
+}
+
+.deleteBtn {
+      background: rgb(239, 68, 68);
+      color: white;
+}
+
+.deleteBtn:hover {
+      background: rgb(220, 38, 38);
+      transform: translateY(-2px);
+}
+
+.viewBtn {
+      background: rgb(107, 114, 128);
+      color: white;
+}
+
+.viewBtn:hover {
+      background: rgb(75, 85, 99);
+      transform: translateY(-2px);
+}
+
+.emptyState {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.emptyIcon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+}
+
+.emptyTitle {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0 0 0.5rem 0;
+}
+
+.emptyText {
+      font-size: 1rem;
+      color: rgb(107, 114, 128);
+      margin: 0;
+}
+
+.modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+}
+
+.modalActive {
+      display: flex;
+}
+
+.modalContent {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+      from {
+            opacity: 0;
+            transform: translateY(20px);
+      }
+
+      to {
+            opacity: 1;
+            transform: translateY(0);
+      }
+}
+
+.modalHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid rgb(239, 68, 68);
+      padding-bottom: 1rem;
+}
+
+.modalTitle {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0;
+}
+
+.closeBtn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: rgb(107, 114, 128);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.3s ease;
+}
+
+.closeBtn:hover {
+      color: rgb(31, 41, 55);
+}
+
+.formGroup {
+      margin-bottom: 1.5rem;
+}
+
+.label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: rgb(31, 41, 55);
+      margin: 0 0 0.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+}
+
+.input,
+.textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid rgb(229, 231, 235);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+      outline: none;
+      border-color: rgb(239, 68, 68);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.textarea {
+      resize: vertical;
+      min-height: 100px;
+}
+
+.formRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+}
+
+.submitBtn {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, rgb(239, 68, 68) 0%, rgb(248, 113, 113) 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.submitBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.submitBtn:active {
+      transform: translateY(0);
+}
+
+.cancelBtn {
+      width: 100%;
+      padding: 0.875rem;
+      background: rgb(229, 231, 235);
+      color: rgb(31, 41, 55);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.75rem;
+}
+
+.cancelBtn:hover {
+      background: rgb(209, 213, 219);
+      transform: translateY(-2px);
+}
+
+.buttonGroup {
+      display: flex;
+      gap: 1rem;
+}
+
+.messageContainer {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+      from {
+            opacity: 0;
+            transform: translateY(-10px);
+      }
+
+      to {
+            opacity: 1;
+            transform: translateY(0);
+      }
+}
+
+.successMessage {
+      background: rgb(240, 253, 250);
+      border: 1px solid rgb(167, 243, 208);
+      color: rgb(5, 120, 84);
+}
+
+.errorMessage {
+      background: rgb(254, 242, 242);
+      border: 1px solid rgb(252, 165, 165);
+      color: rgb(159, 18, 57);
+}
+
+.messageClose {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 0;
+      color: inherit;
+      transition: opacity 0.3s ease;
+}
+
+.messageClose:hover {
+      opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+      .dashboard {
+            padding: 1rem;
+      }
+
+      .dashboardTitle {
+            font-size: 1.75rem;
+      }
+
+      .statsContainer {
+            grid-template-columns: 1fr;
+      }
+
+      .sectionHeader {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+      }
+
+      .apartmentGrid {
+            grid-template-columns: 1fr;
+      }
+
+      .formRow {
+            grid-template-columns: 1fr;
+      }
+
+      .apartmentDetails {
+            grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cardActions {
+            flex-direction: column;
+      }
+
+      .actionBtn {
+            width: 100%;
+      }
+
+      .modalContent {
+            width: 95%;
+            padding: 1.5rem;
+      }
 }
