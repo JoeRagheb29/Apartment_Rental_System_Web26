@@ -137,6 +137,24 @@
   box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
 }
 
+.logoutBtn {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #e63946 0%, #f77f88 100%);
+  color: white;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
+}
+
 @media (max-width: 768px) {
   .navContainer {
     flex-wrap: wrap;
