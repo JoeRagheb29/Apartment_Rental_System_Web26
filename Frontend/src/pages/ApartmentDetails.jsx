@@ -7,6 +7,8 @@ const ApartmentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [apartment, setApartment] = useState({});
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState("fadeIn");
   
   useEffect(() => {
     const Axios = axios.create({
@@ -42,44 +44,99 @@ const ApartmentDetails = () => {
     }
   };
 
+  const handlePrevImage = () => {
+    if (apartment.ApartmentPictures && apartment.ApartmentPictures.length > 0) {
+      setSlideDirection("slideInRight");
+      setMainImageIndex((prev) => (prev === 0 ? apartment.ApartmentPictures.length - 1 : prev - 1));
+    }
+  };
+
+  const handleNextImage = () => {
+    if (apartment.ApartmentPictures && apartment.ApartmentPictures.length > 0) {
+      setSlideDirection("slideInLeft");
+      setMainImageIndex((prev) => (prev === apartment.ApartmentPictures.length - 1 ? 0 : prev + 1));
+    }
+  };
+
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.bentoGrid}>
         
+        {/* Main Image Card with Navigation */}
         <div className={`${styles.gridItem} ${styles.mainImgCard}`}>
-         {apartment.ApartmentPictures  ? 
-          apartment.ApartmentPictures.map((picture, index) => (
-           <img key={index} src={picture} alt={`Apartment ${index}`} />
-         )) : (
-           <p>No images available</p>
-         )}
+          {apartment.ApartmentPictures && apartment.ApartmentPictures.length > 0 ? (
+            <>
+              <img 
+                key={mainImageIndex}
+                src={apartment.ApartmentPictures[mainImageIndex]} 
+                alt={`Apartment ${mainImageIndex}`}
+                className={styles.mainImg}
+                style={{ animation: `${slideDirection} 0.6s ease-in-out` }}
+              />
+              {apartment.ApartmentPictures.length > 1 && (
+                <>
+                  <button 
+                    onClick={handlePrevImage}
+                    className={`${styles.imgNavBtn} ${styles.imgNavBtnPrev}`}
+                  >
+                    ❮
+                  </button>
+                  <button 
+                    onClick={handleNextImage}
+                    className={`${styles.imgNavBtn} ${styles.imgNavBtnNext}`}
+                  >
+                    ❯
+                  </button>
+                  <span className={styles.imgCounter}>
+                    {mainImageIndex + 1} / {apartment.ApartmentPictures.length}
+                  </span>
+                </>
+              )}
+              <span className={styles.locationTag}>📍 {apartment.location}</span>
+            </>
+          ) : (
+            <p className={styles.noImagesMsg}>No images available</p>
+          )}
         </div>
 
+        {/* City and Price Card */}
         <div className={`${styles.gridItem} ${styles.priceCard}`}>
-             <div className={styles.imgOverlay}>
-               <span className={styles.locationTag}>📍 {apartment.location}</span>
-             </div>
-        </div>
-
-        <div className={`${styles.gridItem} ${styles.priceCard}`}>
-          <p className={styles.label}>Monthly Rent</p>
+          <p className={`${styles.label} ${styles.cityLabel}`}>City</p>
+          <h3 className={styles.cityTitle}>
+            {apartment.City}
+          </h3>
+          <p className={`${styles.label} ${styles.cityLabel}`}>Monthly Rent</p>
           <h2 className={styles.priceNumber}>
             {apartment.price} <small className={styles.currency}>EGP</small>
           </h2>
         </div>
 
+        {/* Secondary Image or Info Card */}
+        <div className={`${styles.gridItem} ${styles.subImgCard}`}>
+          {apartment.ApartmentPictures && apartment.ApartmentPictures.length > 1 && (
+            <img 
+              src={apartment.ApartmentPictures[1]} 
+              alt="Secondary view"
+              className={styles.mainImg}
+            />
+          )}
+        </div>
+
+        {/* Property Specs Card */}
         <div className={`${styles.gridItem} ${styles.specsCard}`}>
           <div className={styles.specMini}><span>🛏️</span> {apartment.NumberOfRooms} Bedrooms</div>
-          <div className={styles.specMini}><span>�</span> {apartment.Area} m² Area</div>
+          <div className={styles.specMini}><span>📏</span> {apartment.Area} m² Area</div>
           <div className={styles.specMini}><span>🌅</span> {apartment.View}</div>
         </div>
 
+        {/* Rent Now Button */}
         <div className={styles.gridItem}>
-            <button className={styles.rentBtn} onClick={handleRentNow}>
-                Rent Now
-            </button>
+          <button className={styles.rentBtn} onClick={handleRentNow}>
+            Rent Now
+          </button>
         </div>
 
+        {/* Description Card */}
         <div className={`${styles.gridItem} ${styles.descCard}`}>
           <h4 className={styles.sectionTitle}>Property Highlights</h4>
           <p className={styles.descriptionText}>{apartment.description}</p>
@@ -92,29 +149,3 @@ const ApartmentDetails = () => {
 };
 
 export default ApartmentDetails;
-
-
-//api_scema = tenant	null
-// _id	"69fb521d464eeeb7e9482ee1"
-// City	"Red Sea"
-// NumberOfRooms	4
-// Area	160
-// View	"Sea View"
-// ApartmentPictures	[…]
-// description	"A spacious luxury apartment with panoramic sea views, minutes from the beach and Red sea's vibrant city center."
-// price	4200
-// location	"Barceloneta, Red Sea"
-// __v	0
-
-
-// const apartment = {
-//   price: "15,000",
-//   location: "Maadi, Cairo",
-//   description: "This apartment is located in a prime area, featuring a modern design and high-end finishes. Perfect for families looking for comfort and accessibility.",
-//   specs: { beds: 3, baths: 2, area: 120 },
-//   images: [
-//     "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-//     "https://images.unsplash.com/photo-1484154218962-a197022b5858",
-//     "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6"
-//   ]
-// };
