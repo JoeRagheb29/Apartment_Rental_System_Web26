@@ -1,20 +1,15 @@
-name: Node.js Tests
+name: Node.js CI
 
 on:
   push:
     branches: [ main, master ]
-
   pull_request:
     branches: [ main, master ]
 
 jobs:
   test:
 
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
@@ -22,21 +17,18 @@ jobs:
 
     steps:
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm install
+      working-directory: backend
 
-      - name: Create .env
-        run: |
-          echo JWT_SECRET=testsecret >> .env
-          echo MONGO_URI=mongodb://localhost:27017/test >> .env
-
-      - name: Run tests
-        run: npm test
+    - name: Run tests
+      run: npm test
+      working-directory: backend
