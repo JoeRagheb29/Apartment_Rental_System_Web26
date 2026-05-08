@@ -150,7 +150,7 @@ function Apartments() {
 
       <div className="row">
         {filteredApartments.map((apt) => (
-          <div key={apt.id} className="col-md-4 mb-4">
+          <div key={apt._id} className="col-md-4 mb-4">
             <ApartmentCard apartment={apt} />
           </div>
         ))}
