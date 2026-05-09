@@ -60,6 +60,22 @@ exports.login = async (req, res) => {
     res.status(500).json(err);
   }
 };
+exports.ChangeProfilePicture = async (req, res) => {
+  try {
+    const { email, ProfilePicture } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json("User not found");
+
+    user.ProfilePicture = ProfilePicture;
+    await user.save();
+
+    res.json("Profile picture updated");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+};
 
 exports.logout = (req, res) => {
   res.clearCookie("token");
