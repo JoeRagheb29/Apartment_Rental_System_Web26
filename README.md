@@ -169,7 +169,7 @@ The frontend will be available at `http://localhost:5173` (or as shown in your t
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
-- `POST`
+
 
 ### Apartment Routes
 
