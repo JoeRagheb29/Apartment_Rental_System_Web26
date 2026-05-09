@@ -17,7 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["owner", "tenant"],
         default: "tenant"
+    },
+      ProfilePicture: {
+        type: String,
+        default: "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png"
     }
-
 },{ timestamps: true });
 module.exports = mongoose.model("User", userSchema);
