@@ -236,7 +236,7 @@ router.delete("/:id", auth, role("owner"),async (req, res) => {
  *       401:
  *         description: Unauthorized
  */
-
+//Rent an apartment (Tenant only)
 router.post("/:id/rent", auth, role("tenant"), async (req, res) => {
   try {
     const apartment = await Apartment.findById(req.params.id);
@@ -268,11 +268,36 @@ router.post("/:id/rent", auth, role("tenant"), async (req, res) => {
  *         description: List of apartments
  */
 router.get("/", async (req, res) => {
-  const apartments = await Apartment.find()
-    .populate("owner", "name email")
-    .populate("tenant", "name email");
-
-  res.json(apartments);
+    try {
+        const apartments = await Apartment.find()
+            .populate("owner", "name email")
+            .populate("tenant", "name email");
+        res.json(apartments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
+router.post("/Rent/cancel", auth, role("tenant"), async (req, res) => {
+    try {
+        const { id } = req.body;
+        const apartment = await Apartment.findById(id);
+        if (!apartment){
+            return res.status(404).json({ error: "Apartment not found"});
+        }
+        if (!apartment.tenant) {
+            return res.status(400).json({ error: "Apartment is not currently rented" });
+        }
+        if (apartment.tenant.toString() !== req.user.id) {
+            return res.status(403).json({ error: "You can only cancel your own rentals" });
+        }
+        else {
+            apartment.tenant = null;
+            await apartment.save();
+            res.json({ message: "Rental cancelled successfully", apartment });
+        }
+    }catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 module.exports = router;
