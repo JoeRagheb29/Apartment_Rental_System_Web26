@@ -177,7 +177,8 @@ The frontend will be available at `http://localhost:5173` (or as shown in your t
 - `POST /api/apartments` - Create apartment (admin)
 - `PUT /api/apartments/:id` - Update apartment (admin)
 - `DELETE /api/apartments/:id` - Delete apartment (admin)
-
+- `POST /:id/rent` -Rent Apartment(Tenant)
+- `POST /Rent/cancel` -Cancel Rent Apartment(Tenant)
 ---
 
 ## 🔄 User Workflows
