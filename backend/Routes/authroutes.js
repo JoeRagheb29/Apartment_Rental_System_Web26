@@ -80,7 +80,8 @@ const router = express.Router();
 const {
   register,
   login,
-  logout
+  logout,
+  ChangeProfilePicture,
 } = require("../controllers/authController");
 
 router.route("/register")
@@ -99,5 +100,9 @@ router.route("/logout")
 .get((req,res)=>{
   res.status(400).json("GET not allowed on /logout");
 })
-
+router.route("/profilePicture")
+.post(ChangeProfilePicture)
+.get((req,res)=>{
+  res.status(400).json("GET not allowed on /profilePicture");
+});
 module.exports = router;
