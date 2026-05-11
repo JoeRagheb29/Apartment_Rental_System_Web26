@@ -278,9 +278,32 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.post("/Rent/cancel", auth, role("tenant"), async (req, res) => {
+/**
+ * @swagger
+ * /api/apartments/{id}/rent:
+ *   delete:
+ *     summary: Cancel apartment rental (Tenant only)
+ *     tags: [Apartments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Rental cancelled successfully
+ *       400:
+ *         description: Apartment is not currently rented
+ *       403:
+ *         description: You can only cancel your own rentals
+ *       404:
+ *         description: Apartment not found
+ */
+
+router.delete("/:id/rent", auth, role("tenant"), async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const apartment = await Apartment.findById(id);
         if (!apartment){
             return res.status(404).json({ error: "Apartment not found"});

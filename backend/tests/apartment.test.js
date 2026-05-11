@@ -7,6 +7,7 @@ describe("Apartment Endpoints", () => {
 
   let cookie;
   let apartmentId;
+  let tenantCookie;
 
   const user = {
     name: "Owner",
@@ -40,6 +41,24 @@ describe("Apartment Endpoints", () => {
       });
 
     cookie = loginRes.headers["set-cookie"];
+
+    await request(app)
+      .post("/api/auth/register")
+      .send({
+        name: "tenant",
+        email: "tenant@test.com",
+        password: "123456",
+        role: "tenant"
+      });
+
+    const tenantLogin = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: "tenant@test.com",
+        password: "123456"
+      });
+
+    tenantCookie = tenantLogin.headers["set-cookie"];
 
   });
 
@@ -110,7 +129,9 @@ describe("Apartment Endpoints", () => {
       .set("Cookie", cookie[0]);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.message).toBe("Apartment deleted successfully");
+
+    expect(res.body.message)
+      .toBe("Apartment deleted successfully");
 
   });
 
@@ -156,24 +177,6 @@ describe("Apartment Endpoints", () => {
 
   it("should prevent tenant from creating apartment", async () => {
 
-    await request(app)
-      .post("/api/auth/register")
-      .send({
-        name: "tenant",
-        email: "tenant@test.com",
-        password: "123456",
-        role: "tenant"
-      });
-
-    const login = await request(app)
-      .post("/api/auth/login")
-      .send({
-        email: "tenant@test.com",
-        password: "123456"
-      });
-
-    const tenantCookie = login.headers["set-cookie"];
-
     const res = await request(app)
       .post("/api/apartments")
       .set("Cookie", tenantCookie[0])
@@ -206,24 +209,6 @@ describe("Apartment Endpoints", () => {
   it("should fail if apartment already rented", async () => {
 
     await request(app)
-      .post("/api/auth/register")
-      .send({
-        name: "tenant2",
-        email: "tenant2@test.com",
-        password: "123456",
-        role: "tenant"
-      });
-
-    const tenantLogin = await request(app)
-      .post("/api/auth/login")
-      .send({
-        email: "tenant2@test.com",
-        password: "123456"
-      });
-
-    const tenantCookie = tenantLogin.headers["set-cookie"];
-
-    await request(app)
       .post(`/api/apartments/${apartmentId}/rent`)
       .set("Cookie", tenantCookie[0]);
 
@@ -232,6 +217,23 @@ describe("Apartment Endpoints", () => {
       .set("Cookie", tenantCookie[0]);
 
     expect(res.statusCode).toBe(400);
+
+  });
+
+  it("should cancel apartment rental", async () => {
+
+    await request(app)
+      .post(`/api/apartments/${apartmentId}/rent`)
+      .set("Cookie", tenantCookie[0]);
+
+    const res = await request(app)
+      .delete(`/api/apartments/${apartmentId}/rent`)
+      .set("Cookie", tenantCookie[0]);
+
+    expect(res.statusCode).toBe(200);
+
+    expect(res.body.message)
+      .toBe("Rental cancelled successfully");
 
   });
 
