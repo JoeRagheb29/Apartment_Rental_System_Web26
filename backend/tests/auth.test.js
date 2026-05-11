@@ -116,3 +116,71 @@ it("should fail register duplicate email", async () => {
   expect(res.statusCode).not.toBe(201);
 
 });
+it("should upload profile picture", async () => {
+
+    const register = await request(app)
+        .post("/api/auth/register")
+        .send({
+            name: "Mohamed",
+            email: "m@test.com",
+            password: "123456",
+            role: "tenant"
+        });
+
+    const login = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "m@test.com",
+            password: "123456"
+        });
+
+    const cookie = login.headers["set-cookie"];
+
+    const res = await request(app)
+        .post("/api/auth/upload-profile-picture")
+        .set("Cookie", cookie[0])
+        .attach(
+            "image",
+            "tests/test-image.jpg"
+        );
+
+    expect(res.statusCode).toBe(200);
+
+    expect(res.body.image)
+        .toContain("/uploads/profile/");
+
+    expect(res.body.user.ProfilePicture)
+        .toContain("/uploads/profile/");
+
+});
+it("should fail upload non image", async () => {
+
+    await request(app)
+        .post("/api/auth/register")
+        .send({
+            name: "Mohamed",
+            email: "testupload@test.com",
+            password: "123456",
+            role: "tenant"
+        });
+
+    const login = await request(app)
+        .post("/api/auth/login")
+        .send({
+            email: "testupload@test.com",
+            password: "123456"
+        });
+
+    const cookie = login.headers["set-cookie"];
+
+    const res = await request(app)
+        .post("/api/auth/upload-profile-picture")
+        .set("Cookie", cookie[0])
+        .attach(
+            "image",
+            "package.json"
+        );
+
+    expect(res.statusCode).toBe(500);
+
+});

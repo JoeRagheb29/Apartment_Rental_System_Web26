@@ -1,4 +1,9 @@
 const express = require("express");
+const upload =require("../middleware/uploadProfilePicture");
+const {
+    uploadProfilePicture
+} = require("../controllers/authController");
+const auth = require("../middleware/verifyToken");
 const router = express.Router();
 /**
  * @swagger
@@ -100,9 +105,27 @@ router.route("/logout")
 .get((req,res)=>{
   res.status(400).json("GET not allowed on /logout");
 })
-router.route("/profilePicture")
-.post(ChangeProfilePicture)
-.get((req,res)=>{
-  res.status(400).json("GET not allowed on /profilePicture");
-});
+// router.route("/profilePicture")
+// .post(ChangeProfilePicture)
+// .get((req,res)=>{
+//   res.status(400).json("GET not allowed on /profilePicture");
+// });
+/**
+ * @swagger
+ * /api/auth/upload-profile-picture:
+ *   post:
+ *     summary: Upload profile photo
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Profile picture uploaded
+ *       400:
+ *         description: Bad request
+ */
+router.post(
+    "/upload-profile-picture",
+    auth,
+    upload.single("image"),
+    uploadProfilePicture
+);
 module.exports = router;

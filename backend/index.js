@@ -8,6 +8,7 @@ const apartmentRoutes = require("./Routes/Apartment.route");
 const authRoutes = require("./Routes/authroutes");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
+const path = require("path");
 dotenv.config();
 
 const app = express();
@@ -19,7 +20,7 @@ app.use(cookieParser());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/apartments", apartmentRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use("/uploads",express.static(path.join(__dirname, "uploads")));
 if (process.env.NODE_ENV !== "test") {
   connectDB();
 }

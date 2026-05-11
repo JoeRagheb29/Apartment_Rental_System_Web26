@@ -1,6 +1,9 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sharp = require("sharp");
+const path = require("path");
+const fs = require("fs");
 
 exports.register = async (req, res) => {
   try {
@@ -80,4 +83,53 @@ exports.ChangeProfilePicture = async (req, res) => {
 exports.logout = (req, res) => {
   res.clearCookie("token");
   res.json("Logged out");
+};
+exports.uploadProfilePicture = async (req, res) => {
+
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({
+                error: "No image uploaded"
+            });
+        }
+
+        const filename =
+            `user-${req.user.id}-${Date.now()}.jpeg`;
+
+        const filepath = path.join(
+            __dirname,
+            "../uploads/profile",
+            filename
+        );
+
+        await sharp(req.file.buffer)
+            .resize(300, 300)
+            .jpeg({ quality: 80 })
+            .toFile(filepath);
+
+        const imageUrl =
+            `/uploads/profile/${filename}`;
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            {
+                ProfilePicture: imageUrl
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: "Profile picture uploaded",
+            image: imageUrl,
+            user
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
 };
