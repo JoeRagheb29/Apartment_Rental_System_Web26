@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ApartmentCard from "../components/ApartmentCard";
 import './../App.css'
+import { SkeletonApartmentGrid } from '../components/SkeletonLoader';
 
 import img1 from "../assets/apt1.jpeg";
 import img2 from "../assets/apt2.jpeg";
@@ -13,7 +14,7 @@ import Slider from "../components/Slider";
 function Home() {
   const navigate = useNavigate();
   const [apartments, setApartments] = useState([]);
-  // const [currentSlide, setCurrentSlide] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const Axios = axios.create({
     baseURL: "http://localhost:5000/",
@@ -31,6 +32,7 @@ function Home() {
         const Apartments = await response.data;
         console.log(Apartments);
         setApartments(Apartments);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching apartments:", error);
       }
@@ -53,11 +55,15 @@ function Home() {
         </div>
 
         <div className="row g-4">
-          {apartments.map((apt) => (
-            <div key={apt._id} className="col-md-4">
-              <ApartmentCard apartment={apt} />
-            </div>
-          ))}
+          {loading ? (
+            <SkeletonApartmentGrid count={6} />
+          ) : (
+            apartments.map((apt) => (
+              <div key={apt._id} className="col-md-4">
+                <ApartmentCard apartment={apt} />
+              </div>
+            ))
+          )}
         </div>
       </div>
 

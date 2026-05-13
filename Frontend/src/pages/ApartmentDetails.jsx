@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"; // ضيفنا useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import styles from './ApartmentDetails.module.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
