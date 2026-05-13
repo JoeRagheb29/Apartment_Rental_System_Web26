@@ -1,0 +1,112 @@
+.container {
+  padding: 20px;
+}
+
+/* Skeleton Card */
+.skeletonCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonImage {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.skeletonContent {
+  padding: 16px;
+}
+
+.skeletonText {
+  height: 12px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  animation: shimmer 2s infinite;
+}
+
+/* Skeleton Grid */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Skeleton Hero */
+.skeletonHero {
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+  animation: shimmer 2s infinite;
+  overflow: hidden;
+}
+
+/* Skeleton List */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonListItem {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.skeletonLine {
+  height: 16px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: shimmer 2s infinite;
+}
+
+.skeletonLine:last-child {
+  margin-bottom: 0;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .skeletonGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .skeletonHero {
+    height: 300px;
+  }
+
+  .skeletonImage {
+    height: 150px;
+  }
+}

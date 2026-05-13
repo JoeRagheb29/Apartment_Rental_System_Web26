@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "./components/shared/Navbar";
+import Footer from "./components/shared/Footer";
+import LoadingScreen from "./components/Ui/loading/LoadingScreen";
 import Home from "./pages/Home";
 import Apartments from "./pages/Apartments";
 import ApartmentDetails from "./pages/ApartmentDetails";
@@ -8,13 +9,16 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./Auth/PrivateRoute";
 import AuthContext from "./contexts/AuthContext";
 import { useContext } from "react";
 
 function App() {
+  const { isLoggedIn, loading } = useContext(AuthContext);
 
-  const { isLoggedIn } = useContext(AuthContext);
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Router>

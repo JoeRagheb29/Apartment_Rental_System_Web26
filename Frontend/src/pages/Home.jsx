@@ -1,14 +1,15 @@
 import { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ApartmentCard from "../components/ApartmentCard";
+import ApartmentCard from "../components/Home/ApartmentCard";
 import './../App.css'
-import { SkeletonApartmentGrid } from '../components/SkeletonLoader';
+import SkeletonApartmentGrid from '../components/Ui/loading/SkeletonApartmentGrid';
 
 import img1 from "../assets/apt1.jpeg";
 import img2 from "../assets/apt2.jpeg";
 import img3 from "../assets/apt3.jpeg";
-import Slider from "../components/Slider";
+import Slider from "../components/Home/Slider";
+
 
 
 function Home() {

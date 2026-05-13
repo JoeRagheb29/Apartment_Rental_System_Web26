@@ -127,9 +127,7 @@
 }
 
 .registerBtn {
-  background: linear-gradient(135deg, #e63946 0%, #f77f88 100%);
-  color: white;
-  border: 2px solid transparent;
+  @apply bg-gradient-to-r from-#e63946 to-#f77f88 border-2 border-transparent ;
 }
 
 .registerBtn:hover {

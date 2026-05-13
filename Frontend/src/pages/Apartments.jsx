@@ -1,4 +1,4 @@
-import ApartmentCard from "../components/ApartmentCard";
+import ApartmentCard from "../components/Home/ApartmentCard";
 import { useState , useEffect } from "react";
 import axios from "axios";
 
