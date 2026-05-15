@@ -3,9 +3,11 @@ const app = require("../index");
 
 require("./setup");
 
-describe("Apartment Endpoints", () => {
+describe("Relationship Endpoints", () => {
 
-  let cookie;
+  let ownerToken;
+  let tenantToken;
+  let apartmentId;
 
   const apartmentData = {
     City: "Cairo",
@@ -20,23 +22,56 @@ describe("Apartment Endpoints", () => {
 
   beforeAll(async () => {
 
+    // OWNER
     await request(app)
       .post("/api/auth/register")
       .send({
         name: "owner",
-        email: "owner@test.com",
+        email: "owner2@test.com",
         password: "123456",
         role: "owner"
       });
 
-    const login = await request(app)
+    const ownerLogin = await request(app)
       .post("/api/auth/login")
       .send({
-        email: "owner@test.com",
-        password: "123456"
+        email: "owner2@test.com",
+        password: "123456",
+        role: "owner"
       });
 
-    cookie = login.headers["set-cookie"];
+    ownerToken = ownerLogin.body.token;
+
+    // TENANT
+    await request(app)
+      .post("/api/auth/register")
+      .send({
+        name: "tenant",
+        email: "tenant2@test.com",
+        password: "123456",
+        role: "tenant"
+      });
+
+    const tenantLogin = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: "tenant2@test.com",
+        password: "123456",
+        role: "tenant"
+      });
+
+    tenantToken = tenantLogin.body.token;
+
+  });
+
+  beforeEach(async () => {
+
+    const res = await request(app)
+      .post("/api/apartments")
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send(apartmentData);
+
+    apartmentId = res.body._id;
 
   });
 
@@ -44,31 +79,17 @@ describe("Apartment Endpoints", () => {
 
     const res = await request(app)
       .post("/api/apartments")
-      .set("Cookie", cookie[0])
+      .set("Authorization", `Bearer ${ownerToken}`)
       .send(apartmentData);
 
     expect(res.statusCode).toBe(201);
 
   });
 
-  it("should get all apartments", async () => {
-
-    const res = await request(app)
-      .get("/api/apartments");
-
-    expect(res.statusCode).toBe(200);
-
-  });
-
   it("should get apartment by ID", async () => {
 
-    const create = await request(app)
-      .post("/api/apartments")
-      .set("Cookie", cookie[0])
-      .send(apartmentData);
-
     const res = await request(app)
-      .get(`/api/apartments/${create.body._id}`);
+      .get(`/api/apartments/${apartmentId}`);
 
     expect(res.statusCode).toBe(200);
 
@@ -76,58 +97,49 @@ describe("Apartment Endpoints", () => {
 
   it("should update apartment", async () => {
 
-    const create = await request(app)
-      .post("/api/apartments")
-      .set("Cookie", cookie[0])
-      .send(apartmentData);
-
     const res = await request(app)
-      .put(`/api/apartments/${create.body._id}`)
-      .set("Cookie", cookie[0])
-      .send({ price: 6000 });
+      .put(`/api/apartments/${apartmentId}`)
+      .set("Authorization", `Bearer ${ownerToken}`)
+      .send({
+        price: 7000
+      });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.price).toBe(6000);
+    expect(res.body.price).toBe(7000);
 
   });
 
   it("should delete apartment", async () => {
 
-    const create = await request(app)
-      .post("/api/apartments")
-      .set("Cookie", cookie[0])
-      .send(apartmentData);
-
     const res = await request(app)
-      .delete(`/api/apartments/${create.body._id}`)
-      .set("Cookie", cookie[0]);
+      .delete(`/api/apartments/${apartmentId}`)
+      .set("Authorization", `Bearer ${ownerToken}`);
 
     expect(res.statusCode).toBe(200);
 
   });
 
-  it("should search by city", async () => {
+  it("should rent apartment", async () => {
+
+    const res = await request(app)
+      .post(`/api/apartments/${apartmentId}/rent`)
+      .set("Authorization", `Bearer ${tenantToken}`);
+
+    expect(res.statusCode).toBe(200);
+
+  });
+
+  it("should cancel rental", async () => {
 
     await request(app)
-      .post("/api/apartments")
-      .set("Cookie", cookie[0])
-      .send(apartmentData);
+      .post(`/api/apartments/${apartmentId}/rent`)
+      .set("Authorization", `Bearer ${tenantToken}`);
 
     const res = await request(app)
-      .get("/api/apartments/search?city=Cairo");
+      .delete(`/api/apartments/${apartmentId}/rent`)
+      .set("Authorization", `Bearer ${tenantToken}`);
 
     expect(res.statusCode).toBe(200);
-
-  });
-
-  it("should include apartment images", async () => {
-
-    const res = await request(app)
-      .post("/api/apartments")
-      .set("Cookie", cookie[0])
-      .send(apartmentData);
-
-    expect(res.body.ApartmentPictures.length).toBeGreaterThan(0);
 
   });
 
