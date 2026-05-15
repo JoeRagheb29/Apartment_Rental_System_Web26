@@ -323,4 +323,54 @@ router.delete("/:id/rent", auth, role("tenant"), async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+/**
+ * @swagger
+ * /api/apartments/profile/my-listings:
+ *   get:
+ *     summary: Get all apartments owned by the logged-in user
+ *     tags: [Apartments]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: List of owned apartments
+ *       401:
+ *         description: Unauthorized
+ */
+//Owner can see all their apartments with tenant info
+router.get("/Profile/Apartments", auth, role("owner"), async (req, res) => {
+    try {
+        const apartments = await Apartment.find({ owner: req.user.id })
+            .populate("tenant", "name email");
+        res.json(apartments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+/**
+ * @swagger
+ * /api/apartments/profile/my-rentals:
+ *   get:
+ *     summary: Get all apartments rented by the logged-in user
+ *     tags: [Apartments]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: List of rented apartments
+ *       401:
+ *         description: Unauthorized
+ */
+//Tenant can see their rented apartment with owner info
+router.get("/Profile/Rented", auth, role("tenant"), async (req, res) => {
+    try {
+        const apartments = await Apartment.find({ tenant: req.user.id })
+            .populate("owner", "name email");
+        res.json(apartments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
+
