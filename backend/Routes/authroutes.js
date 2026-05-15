@@ -14,6 +14,40 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - Name
+ *         - email
+ *         - password
+ *         - role
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: 665b43f23d5fbb13f8b9d111
+ *         Name:
+ *           type: string
+ *           example: John Doe
+ *         email:
+ *           type: string
+ *           example: john.doe@example.com
+ *         password:
+ *           type: string
+ *           example: password123
+ *         role:
+ *           type: string
+ *           enum: [owner, tenant]
+ *           example: tenant
+ *         ProfilePicture:
+ *           type: string
+ *           example: https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png
+ */
+/**
+
+/**
+ * @swagger
  * /api/auth/register:
  *   post:
  *     summary: Register new user
