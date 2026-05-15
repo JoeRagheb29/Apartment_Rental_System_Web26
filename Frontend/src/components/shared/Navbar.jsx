@@ -6,7 +6,7 @@ import AuthContext from "../../contexts/AuthContext";
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, handleLogout } = useContext(AuthContext);
+  const { isLoggedIn, handleLogout , user } = useContext(AuthContext);
 
   const getLinkClass = (path) => {
     return `${styles.navLink} ${
@@ -34,7 +34,7 @@ const Navbar = () => {
           <li><Link to="/apartments" className={getLinkClass("/apartments")}>
               Apartments
             </Link></li>
-          {isLoggedIn && (
+          {isLoggedIn && user.role === 'owner' && (
             <li><Link to="/dashboard" className={getLinkClass("/dashboard")}>
               Dashboard
             </Link></li>

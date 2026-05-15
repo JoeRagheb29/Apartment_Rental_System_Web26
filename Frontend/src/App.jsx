@@ -35,8 +35,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route element={<PrivateRoute isAuthenticated={isLoggedIn} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route element={<PrivateRoute isAuthenticated={isLoggedIn} requiredRole="owner" />}>
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Routes>
         </main>
