@@ -11,7 +11,7 @@ const User = require('../Models/User');
 
 /**
  * @swagger
- * /api/profile/profile:
+ * /api/user/profile:
  *   get:
  *     summary: Get current user profile
  *     tags: [Profile]
@@ -57,7 +57,7 @@ router.get('/profile', protect, async (req, res) => {
 
 /**
  * @swagger
- * /api/profile/profile:
+ * /api/user/profile:
  *   put:
  *     summary: Update current user profile
  *     tags: [Profile]
