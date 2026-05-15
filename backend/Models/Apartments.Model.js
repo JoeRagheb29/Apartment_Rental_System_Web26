@@ -5,7 +5,7 @@ const apartmentSchema = new mongoose.Schema({
     NumberOfRooms: { type: Number, required: true },
     Area: { type: Number, required: true },
     View: { type: String, required: true },
-    ApartmentPictures: [String, { required: true }],
+    ApartmentPictures: {type: [String],required: true,validate: v => v.length > 0},
     description: { type: String, required: true },
     price: { type: Number, required: true },
     location: { type: String, required: true },
