@@ -323,4 +323,28 @@ router.delete("/:id/rent", auth, role("tenant"), async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+//Owner can see all their apartments with tenant info
+router.get("/Profile/Apartments", auth, role("owner"), async (req, res) => {
+    try {
+        const apartments = await Apartment.find({ owner: req.user.id })
+            .populate("tenant", "name email");
+        res.json(apartments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+//Tenant can see their rented apartment with owner info
+router.get("/Profile/Rented", auth, role("tenant"), async (req, res) => {
+    try {
+        const apartments = await Apartment.find({ tenant: req.user.id })
+            .populate("owner", "name email");
+        res.json(apartments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
+
