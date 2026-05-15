@@ -9,20 +9,23 @@ describe("Apartment Endpoints", () => {
   let tenantToken;
   let apartmentId;
 
-  const apartmentData = {
-    City: "Cairo",
-    NumberOfRooms: 3,
-    Area: 120,
-    View: "Nile",
-    ApartmentPictures: ["img1.jpg"],
-    description: "Nice apartment",
-    price: 5000,
-    location: "Zamalek"
-  };
+const apartmentData = {
+  City: "Cairo",
+  NumberOfRooms: 3,
+  Area: 120,
+  View: "Nile",
+  ApartmentPictures: ["img1.jpg"],
+  description: "Nice apartment",
+  price: 5000,
+  location: "Zamalek",
+
+  floorNumber: 3,
+  totalFloors: 10
+};
 
   beforeAll(async () => {
 
-    // OWNER
+    // OWNER REGISTER
     await request(app)
       .post("/api/auth/register")
       .send({
@@ -32,17 +35,17 @@ describe("Apartment Endpoints", () => {
         role: "owner"
       });
 
+    // OWNER LOGIN
     const ownerLogin = await request(app)
       .post("/api/auth/login")
       .send({
         email: "owner@test.com",
-        password: "123456",
-        role: "owner"
+        password: "123456"
       });
 
     ownerToken = ownerLogin.body.token;
 
-    // TENANT
+    // TENANT REGISTER
     await request(app)
       .post("/api/auth/register")
       .send({
@@ -52,12 +55,12 @@ describe("Apartment Endpoints", () => {
         role: "tenant"
       });
 
+    // TENANT LOGIN
     const tenantLogin = await request(app)
       .post("/api/auth/login")
       .send({
         email: "tenant@test.com",
-        password: "123456",
-        role: "tenant"
+        password: "123456"
       });
 
     tenantToken = tenantLogin.body.token;
@@ -70,6 +73,9 @@ describe("Apartment Endpoints", () => {
       .post("/api/apartments")
       .set("Authorization", `Bearer ${ownerToken}`)
       .send(apartmentData);
+
+    // DEBUG
+    console.log("CREATE APARTMENT RESPONSE:", res.body);
 
     apartmentId = res.body._id;
 
@@ -84,6 +90,8 @@ describe("Apartment Endpoints", () => {
         ...apartmentData,
         City: "Alex"
       });
+
+    console.log(res.body);
 
     expect(res.statusCode).toBe(201);
 
@@ -103,6 +111,8 @@ describe("Apartment Endpoints", () => {
     const res = await request(app)
       .get(`/api/apartments/${apartmentId}`);
 
+    console.log(res.body);
+
     expect(res.statusCode).toBe(200);
 
   });
@@ -116,6 +126,8 @@ describe("Apartment Endpoints", () => {
         price: 6000
       });
 
+    console.log(res.body);
+
     expect(res.statusCode).toBe(200);
     expect(res.body.price).toBe(6000);
 
@@ -126,6 +138,8 @@ describe("Apartment Endpoints", () => {
     const res = await request(app)
       .delete(`/api/apartments/${apartmentId}`)
       .set("Authorization", `Bearer ${ownerToken}`);
+
+    console.log(res.body);
 
     expect(res.statusCode).toBe(200);
 
@@ -166,6 +180,8 @@ describe("Apartment Endpoints", () => {
       .post(`/api/apartments/${apartmentId}/rent`)
       .set("Authorization", `Bearer ${tenantToken}`);
 
+    console.log(res.body);
+
     expect(res.statusCode).toBe(200);
 
   });
@@ -179,6 +195,8 @@ describe("Apartment Endpoints", () => {
     const res = await request(app)
       .delete(`/api/apartments/${apartmentId}/rent`)
       .set("Authorization", `Bearer ${tenantToken}`);
+
+    console.log(res.body);
 
     expect(res.statusCode).toBe(200);
 
