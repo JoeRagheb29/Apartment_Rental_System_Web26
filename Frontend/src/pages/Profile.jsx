@@ -1,6 +1,7 @@
 import styles from './Profile.module.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 // import AuthContext from '../contexts/AuthContext';
 
 const Profile = () => {
@@ -100,10 +101,10 @@ const Profile = () => {
         email: response.data.email
       });
       setIsEditing(false);
-      alert('تم تحديث البيانات بنجاح!');
+      toast.success('تم تحديث البيانات بنجاح!');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('حدث خطأ أثناء التحديث');
+      toast.error('حدث خطأ أثناء التحديث');
     }
   };
 

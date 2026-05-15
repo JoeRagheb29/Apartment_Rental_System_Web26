@@ -5,6 +5,7 @@ import styles from './Auth.module.css';
 import axios from 'axios';
 import { useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const LoginPage = () => {
       console.log("token from response:", token);
       handleLogin(user, token);
 
-      alert('Logged in successfully!');
+      toast.success('Logged in successfully!');
 
       console.log("role from values:", values.role)
       if(values.role === "owner") 
@@ -51,7 +52,7 @@ const LoginPage = () => {
 
     } catch (error) {
       console.error(error);
-      alert('Login failed. Please check your credentials.');
+      toast.error('Login failed. Please check your credentials.');
     } finally {
       setSubmitting(false);
     }

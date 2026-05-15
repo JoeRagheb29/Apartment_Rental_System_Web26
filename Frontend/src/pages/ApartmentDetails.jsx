@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useContext } from "react";
 import AuthContext from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 const ApartmentDetails = () => {
   const { id } = useParams();
@@ -36,13 +37,9 @@ const ApartmentDetails = () => {
 
   const handleRentNow = () => {
     if (isLoggedIn) {
-      alert("Proceeding to rent apartment: " + id);
+      toast.success("Proceeding to rent apartment (your logic will implemented here): " + id);
     } else {
-      (
-        <div className="alert alert-warning" role="alert">
-          A simple warning alert—check it out!
-        </div>
-      )
+      toast.error("You need to be logged in to rent an apartment.");
       navigate("/login");
     }
   };

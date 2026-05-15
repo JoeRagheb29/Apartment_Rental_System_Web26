@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./Auth/PrivateRoute";
 import AuthContext from "./contexts/AuthContext";
 import { useContext } from "react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { isLoggedIn, loading } = useContext(AuthContext);
@@ -21,11 +22,13 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="d-flex flex-column min-vh-100">
-        <Navbar />
-        <main className="grow">
-          <Routes>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Router>
+        <div className="d-flex flex-column min-vh-100">
+          <Navbar />
+          <main className="grow">
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/apartments" element={<Apartments />} />
             <Route path="/apartments/:id" element={<ApartmentDetails />} />
@@ -40,6 +43,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+  </>
   );
 }
 
