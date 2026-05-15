@@ -1,36 +1,71 @@
 import styles from './Profile.module.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+// import AuthContext from '../contexts/AuthContext';
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    name: 'raghebb',
-    email: 'raghebb@admin.com',
-    role: 'owner',
-    profilePicture: "https://api.dicebear.com/9.x/adventurer/svg?seed=Emery"
-  });
+  // const { user } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [ownedApartments, setOwnedApartments] = useState([]);
   const [rentedApartments, setRentedApartments] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState(user);
+  const [editData, setEditData] = useState({});
 
   useEffect(() => {
-    // Fetch apartments data from API
-    const fetchApartments = async () => {
+    const fetchProfileAndApartments = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/apartments');
-        const apartments = response.data;
+        // 1. هنجيب التوكن بتاع اليوزر من اللوكال ستوريدج (لازم تكون مسيفه وقت اللوجن بنفس الاسم)
+        const token = localStorage.getItem('userToken'); 
         
-        // For demo purposes, assume first 3 are owned and next 2 are rented
+        // لو مفيش توكن ممكن توقعه لصفحة اللوجن هنا
+        if(!token) {
+           setError("يجب تسجيل الدخول أولاً");
+           setLoading(false);
+           return;
+        }
+
+        console.log("token found from profile:", token);
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+
+        // 2. نجيب بيانات اليوزر
+        const userRes = await axios.get('http://localhost:5000/api/user/profile', config);
+
+        // بنحط داتا افتراضية لو مش موجودة في الداتابيز عشان التصميم ميبوظش
+        const fetchedUser = {
+          ...userRes.data,
+          role: userRes.data.role || 'user',
+          profilePicture: userRes.data.profilePicture || "https://api.dicebear.com/9.x/adventurer/svg?seed=Emery"
+        };
+
+        setUser(fetchedUser);
+        setEditData(fetchedUser); // بنجهز الداتا جوه الفورم
+
+        // 3. نجيب بيانات الشقق (زي ما إنت كنت عاملها)
+        const apartmentsRes = await fetch('http://localhost:5000/api/apartments', config);
+        const apartments = await apartmentsRes.json();
+        
+        // For demo purposes
         setOwnedApartments(apartments.slice(0, 3));
         setRentedApartments(apartments.slice(3, 5));
+
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching apartments:', error);
+        console.error('Error fetching data:', error);
+        setError("حدث خطأ في تحميل البيانات");
+        setLoading(false);
       }
     };
 
-    fetchApartments();
+    fetchProfileAndApartments();
   }, []);
 
   const handleEditChange = (e) => {
@@ -41,13 +76,41 @@ const Profile = () => {
     });
   };
 
-  const handleSaveChanges = (e) => {
+  const handleSaveChanges = async (e) => {
     e.preventDefault();
-    setUser(editData);
+    try {
+      const token = localStorage.getItem('userToken');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
 
+      // نبعت التعديلات للباك إند
+      const response = await axios.put(
+        'http://localhost:5000/api/user/profile',
+        { name: editData.name, email: editData.email }, 
+        config
+      );
 
-    setIsEditing(false);
+      // نحدث الـ State بالبيانات الجديدة اللي رجعت من السيرفر
+      setUser({
+        ...user,
+        name: response.data.name,
+        email: response.data.email
+      });
+      setIsEditing(false);
+      toast.success('تم تحديث البيانات بنجاح!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('حدث خطأ أثناء التحديث');
+    }
   };
+
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Loading profile...</div>;
+  if (error) return <div style={{color: 'red', textAlign: 'center', marginTop: '50px'}}>{error}</div>;
+  if (!user) return null;
 
   return (
     <div className={styles.pageWrapper}>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import  AuthContext from "./AuthContext";
+import AuthContext from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,11 +10,9 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       try {
-        // localStorage.removeItem("user");
-        
-
         const token = localStorage.getItem("userToken");
         const storedUser = localStorage.getItem("user");
+        
         if (token && storedUser) {
           setIsLoggedIn(true);
           setUser(JSON.parse(storedUser));

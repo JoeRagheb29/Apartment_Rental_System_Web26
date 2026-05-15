@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "./components/shared/Navbar";
+import Footer from "./components/shared/Footer";
+import LoadingScreen from "./components/Ui/loading/LoadingScreen";
 import Home from "./pages/Home";
 import Apartments from "./pages/Apartments";
 import ApartmentDetails from "./pages/ApartmentDetails";
@@ -8,20 +9,26 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./Auth/PrivateRoute";
 import AuthContext from "./contexts/AuthContext";
 import { useContext } from "react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
+  const { isLoggedIn, loading } = useContext(AuthContext);
 
-  const { isLoggedIn } = useContext(AuthContext);
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <Router>
-      <div className="d-flex flex-column min-vh-100">
-        <Navbar />
-        <main className="grow">
-          <Routes>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Router>
+        <div className="d-flex flex-column min-vh-100">
+          <Navbar />
+          <main className="grow">
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/apartments" element={<Apartments />} />
             <Route path="/apartments/:id" element={<ApartmentDetails />} />
@@ -36,6 +43,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+  </>
   );
 }
 
