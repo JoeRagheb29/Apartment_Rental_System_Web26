@@ -6,6 +6,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const apartmentRoutes = require("./Routes/Apartment.route");
 const authRoutes = require("./Routes/authroutes");
+const userRoutes = require('./Routes/userRoutes');
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const path = require("path");
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/user', userRoutes);
 app.use("/api/apartments", apartmentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/uploads",express.static(path.join(__dirname, "uploads")));
