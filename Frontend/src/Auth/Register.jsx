@@ -4,8 +4,9 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import AuthContext from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
+// import { useContext } from 'react';
+// import AuthContext from '../contexts/AuthContext';
 
 const API = axios.create({
   baseURL: 'http://localhost:5000/',
@@ -14,7 +15,7 @@ const API = axios.create({
 
 function Register() {
   const navigate = useNavigate();
-  const { handleLogin } = useContext(AuthContext);
+  // const { handleLogin } = useContext(AuthContext);
 
   const formFields = [
     { id: 'name', name: 'name', label: 'Full Name', type: 'text', required: true, placeholder: 'Enter your full name' },
@@ -40,17 +41,17 @@ function Register() {
 
       console.log('User registered:', response.data);
       
-      // Auto-login after registration
-      const { token, user } = response.data;
-      handleLogin(user, token);
-      
-      alert('Registration successful! Redirecting to dashboard.');
+      // // Auto-login after registration
+      // const { usertoken, user } = response.data;
+      // handleLogin(user, usertoken);
+
+      // toast.success('Registration successful! Redirecting to dashboard.');
       navigate(values.role === 'owner' ? '/dashboard' : '/');
       resetForm();
     } 
     catch (error) {
       console.error('Error registering user:', error);
-      alert('Registration failed. Please try again.');
+      toast.error('Registration failed. Please try again.');
     }
     finally {
       setSubmitting(false);

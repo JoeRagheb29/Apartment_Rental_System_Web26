@@ -11,7 +11,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
 
   const [ownedApartments, setOwnedApartments] = useState([]);
-  const [rentedApartments, setRentedApartments] = useState([]);
+  const [rentedApartment, setRentedApartment] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
 
@@ -49,13 +49,38 @@ const Profile = () => {
         setUser(fetchedUser);
         setEditData(fetchedUser); // بنجهز الداتا جوه الفورم
 
-        // 3. نجيب بيانات الشقق (زي ما إنت كنت عاملها)
-        const apartmentsRes = await fetch('http://localhost:5000/api/apartments', config);
-        const apartments = await apartmentsRes.json();
+        // 3. نجيب بيانات الشقق بناءً على دور المستخدم
+        const apartmentsRes = await axios.get('http://localhost:5000/api/apartments', config);
+        const apartments = apartmentsRes.data;
         
-        // For demo purposes
-        setOwnedApartments(apartments.slice(0, 3));
-        setRentedApartments(apartments.slice(3, 5));
+        if (fetchedUser.role === 'owner') {
+          
+          const ownedApts = apartments.filter(apt => apt.owner === fetchedUser._id);
+          
+          setOwnedApartments(ownedApts);
+          // // نجيب بيانات الـ Tenants لكل شقة
+          // const enrichedApts = await Promise.all(
+          //   ownedApts.map(async (apt) => {
+          //     if (apt.tenant) {
+          //       try {
+          //         const tenantRes = await axios.get(`http://localhost:5000/api/user/${apt.tenant}`, config);
+          //         return { ...apt, tenant: tenantRes.data };
+          //       } catch {
+          //         return apt;
+          //       }
+          //     }
+          //     return apt;
+          //   })
+          // );
+          // setOwnedApartments(enrichedApts);
+          
+        } else if (fetchedUser.role === 'tenant') {
+          // إذا كان tenant - نجيب الشقة اللي هو بيستأجرها (شقة واحدة فقط)
+          const rentedApts = apartments.filter(apt => apt.tenant === fetchedUser._id);
+          if (rentedApts.length > 0) {
+            setRentedApartment(rentedApts[0]); // نأخذ أول شقة فقط
+          }
+        }
 
         setLoading(false);
       } catch (error) {
@@ -127,13 +152,8 @@ const Profile = () => {
             <p className={styles.userEmail}>📧 {user.email}</p>
             <div className={styles.stats}>
               <div className={styles.statItem}>
-                <span className={styles.statNumber}>{ownedApartments.length}</span>
-                <span className={styles.statLabel}>Owned</span>
-              </div>
-              <div className={styles.divider}></div>
-              <div className={styles.statItem}>
-                <span className={styles.statNumber}>{rentedApartments.length}</span>
-                <span className={styles.statLabel}>Rented</span>
+                <span className={styles.statNumber}>{user.role === 'owner' ? ownedApartments.length : (rentedApartment ? 1 : 0)}</span>
+                <span className={styles.statLabel}>{user.role === 'owner' ? 'Owned' : 'Renting'}</span>
               </div>
             </div>
           </div>
@@ -183,80 +203,131 @@ const Profile = () => {
           </div>
         )}
       </div>
+      
 
-      {/* Owned Apartments Section */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>🏠 Your Owned Apartments</h2>
-          <p className={styles.sectionSubtitle}>Properties you own</p>
-        </div>
-        {ownedApartments.length > 0 ? (
-          <div className={styles.apartmentsGrid}>
-            {ownedApartments.map((apt) => (
-              <div key={apt._id} className={styles.apartmentCard}>
-                <div className={styles.apartmentImageContainer}>
-                  <img 
-                    src={apt.ApartmentPictures?.[0] || 'https://via.placeholder.com/300'} 
-                    alt={apt.City}
-                    className={styles.apartmentImage}
-                  />
-                  <span className={styles.statusBadge}>OWNED</span>
-                </div>
-                <div className={styles.apartmentContent}>
-                  <h3 className={styles.apartmentCity}>{apt.City}</h3>
-                  <p className={styles.apartmentLocation}>📍 {apt.location}</p>
-                  <div className={styles.apartmentDetails}>
-                    <span>🛏️ {apt.NumberOfRooms} Rooms</span>
-                    <span>📏 {apt.Area}m²</span>
+      {/* Owned Apartments Section - Only for Owners */}
+      {user.role === 'owner' && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>🏠 Your Owned Apartments</h2>
+            <p className={styles.sectionSubtitle}>Properties you own and their rental status</p>
+          </div>
+          {ownedApartments.length > 0 ? (
+            <div className={styles.apartmentsGrid}>
+              {ownedApartments.map((apt) => (
+                <div key={apt._id} className={styles.apartmentCard}>
+                  <div className={styles.apartmentImageContainer}>
+                    <img 
+                      src={apt.ApartmentPictures?.[0] || 'https://via.placeholder.com/300'} 
+                      alt={apt.City}
+                      className={styles.apartmentImage}
+                    />
+                    <span className={apt.tenant ? `${styles.statusBadge} ${styles.rented}` : styles.statusBadge}>
+                      {apt.tenant ? 'RENTED' : 'AVAILABLE'}
+                    </span>
                   </div>
-                  <div className={styles.apartmentPrice}>{apt.price} EGP/month</div>
+                  <div className={styles.apartmentContent}>
+                    <h3 className={styles.apartmentCity}>{apt.City}</h3>
+                    <p className={styles.apartmentLocation}>📍 {apt.location}</p>
+                    <div className={styles.apartmentDetails}>
+                      <span>🛏️ {apt.NumberOfRooms} Rooms</span>
+                      <span>📏 {apt.Area}m²</span>
+                    </div>
+                    <div className={styles.apartmentPrice}>{apt.price} EGP/month</div>
+                    
+                    {apt.tenant ? (
+                      <div style={{
+                        marginTop: '1rem',
+                        padding: '0.75rem',
+                        backgroundColor: '#f0fdf4',
+                        borderRadius: '6px',
+                        borderLeft: '4px solid #10b981'
+                      }}>
+                        <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+                          <strong>👤 Tenant:</strong> {apt.tenant?.name || 'Loading...'}
+                        </p>
+                        <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+                          <strong>📧 Email:</strong> {apt.tenant?.email || 'N/A'}
+                        </p>
+                        <p style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: '#059669' }}>
+                          ✓ Currently Rented
+                        </p>
+                      </div>
+                    ) : (
+                      <div style={{
+                        marginTop: '1rem',
+                        padding: '0.75rem',
+                        backgroundColor: '#fef3c7',
+                        borderRadius: '6px',
+                        borderLeft: '4px solid #f59e0b'
+                      }}>
+                        <p style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: '#92400e' }}>
+                          ⚠️ No tenant assigned
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.emptyState}>
-            <p>No owned apartments yet</p>
-          </div>
-        )}
-      </section>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <p>No owned apartments yet</p>
+            </div>
+          )}
+        </section>
+      )}
 
-      {/* Rented Apartments Section */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>🔑 Your Rented Apartments</h2>
-          <p className={styles.sectionSubtitle}>Properties you are renting</p>
-        </div>
-        {rentedApartments.length > 0 ? (
-          <div className={styles.apartmentsGrid}>
-            {rentedApartments.map((apt) => (
-              <div key={apt._id} className={styles.apartmentCard}>
+      {/* Rented Apartment Section - Only for Tenants */}
+      {user.role === 'tenant' && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>🔑 Your Rented Apartment</h2>
+            <p className={styles.sectionSubtitle}>The apartment you are living in</p>
+          </div>
+          {rentedApartment ? (
+            <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+              <div key={rentedApartment._id} className={styles.apartmentCard}>
                 <div className={styles.apartmentImageContainer}>
                   <img 
-                    src={apt.ApartmentPictures?.[0] || 'https://via.placeholder.com/300'} 
-                    alt={apt.City}
+                    src={rentedApartment.ApartmentPictures?.[0] || 'https://via.placeholder.com/300'} 
+                    alt={rentedApartment.City}
                     className={styles.apartmentImage}
                   />
                   <span className={`${styles.statusBadge} ${styles.rented}`}>RENTING</span>
                 </div>
                 <div className={styles.apartmentContent}>
-                  <h3 className={styles.apartmentCity}>{apt.City}</h3>
-                  <p className={styles.apartmentLocation}>📍 {apt.location}</p>
+                  <h3 className={styles.apartmentCity}>{rentedApartment.City}</h3>
+                  <p className={styles.apartmentLocation}>📍 {rentedApartment.location}</p>
                   <div className={styles.apartmentDetails}>
-                    <span>🛏️ {apt.NumberOfRooms} Rooms</span>
-                    <span>📏 {apt.Area}m²</span>
+                    <span>🛏️ {rentedApartment.NumberOfRooms} Rooms</span>
+                    <span>📏 {rentedApartment.Area}m²</span>
+                    <span>👁️ {rentedApartment.View}</span>
                   </div>
-                  <div className={styles.apartmentPrice}>{apt.price} EGP/month</div>
+                  <div className={styles.apartmentPrice}>{rentedApartment.price} EGP/month</div>
+                  
+                  {rentedApartment.description && (
+                    <div style={{
+                      marginTop: '1rem',
+                      padding: '0.75rem',
+                      backgroundColor: '#f3f4f6',
+                      borderRadius: '6px'
+                    }}>
+                      <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+                        <strong>📝 Description:</strong> {rentedApartment.description}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.emptyState}>
-            <p>No rented apartments yet</p>
-          </div>
-        )}
-      </section>
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <p>You haven't rented any apartment yet</p>
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 };
