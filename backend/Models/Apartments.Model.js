@@ -18,7 +18,12 @@ const apartmentSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null
-    }
+    },
+
+    floorNumber: { type: Number, required: true },
+    totalFloors: { type: Number, required: true },
+    amenities: [{ type: String }],
+    petFriendly: { type: Boolean, default: false },
 });
 
 const Apartment = mongoose.model("Apartment", apartmentSchema);
