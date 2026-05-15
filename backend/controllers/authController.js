@@ -47,6 +47,7 @@ exports.login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json("Wrong password");
+    if(user.role !== req.body.role) return res.status(400).json("Wrong role");
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -56,7 +57,16 @@ exports.login = async (req, res) => {
 
     res.cookie("token", token, { httpOnly: true });
 
-    res.json("Logged in");
+    res.json({
+        message: "Logged in successfully",
+        token: token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        }
+      });
 
   } catch (err) {
     console.log(err)

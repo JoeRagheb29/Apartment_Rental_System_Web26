@@ -33,7 +33,7 @@ const LoginPage = () => {
 
       // respone data is just = logged innnnn (cant get user data)
       const response = await API.post('/api/auth/login', values);
-      console.log('response data:', response.data);
+      console.log("Full Response:", response.data);
 
       // Store user data and token in context and localStorage
       const { token, user } = response.data;
