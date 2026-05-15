@@ -1,3 +1,7 @@
+const express = require('express'); 
+const router = express.Router(); 
+const User = require('../Models/User');
+ const protect = require('../middleware/verifyToken');
 /**
  * @swagger
  * tags:
@@ -127,3 +131,4 @@ router.put('/profile', protect, async (req, res) => {
 
     }
 });
+module.exports = router;
