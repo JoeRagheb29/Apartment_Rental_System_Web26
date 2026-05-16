@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Modal from '../components/Admin/Modal';
 
 const Dashboard = () => {
   const [apartments, setApartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
+    Title: '',
     City: '',
     NumberOfRooms: '',
     Area: '',
@@ -15,39 +17,46 @@ const Dashboard = () => {
     price: '',
     location: '',
     description: '',
+    floorNumber: '',
+    totalFloors: '',
+    amenities: [],
+    petFriendly: false,
     ApartmentPictures: [],
   });
 
   const API = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:5000/api/',
   });
 
-  // useEffect(() => {
-  //   const fetchApartments = async () => {
-  //     try {
-  //       const token = localStorage.getItem('userToken');
-  //       const config = {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       };
-  //       const res = await API.get('/apartments', config);
-  //       setApartments(res.data);
-  //     } catch (error) {
-  //       console.error('Error fetching apartments:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchApartments = async () => {
+      try {
+        const token = localStorage.getItem('userToken');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+  
+      const res = await API.get('apartments/profile/my-listings', config);
 
-  //   fetchApartments();
-  // }, []);
+        setApartments(res.data);
+        console.log("Fetched apartments: ", res.data);
+      } catch (error) {
+        console.error('Error fetching apartments:', error);
+      }
+    };
+
+    fetchApartments();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'NumberOfRooms' || name === 'Area' || name === 'price' 
+      [name]: name === 'NumberOfRooms' || name === 'Area' || name === 'price' || name === 'floorNumber' || name === 'totalFloors'
         ? Number(value) 
-        : value,
+        : Array.isArray(value) ? value : value,
     }));
   };
 
@@ -80,6 +89,7 @@ const Dashboard = () => {
       setEditingId(apartment._id);
     } else {
       setFormData({
+        Title: '',
         City: '',
         NumberOfRooms: '',
         Area: '',
@@ -87,6 +97,10 @@ const Dashboard = () => {
         price: '',
         location: '',
         description: '',
+        floorNumber: '',
+        totalFloors: '',
+        amenities: [],
+        petFriendly: false,
         ApartmentPictures: [],
       });
       setEditingId(null);
@@ -98,6 +112,7 @@ const Dashboard = () => {
     setShowModal(false);
     setEditingId(null);
     setFormData({
+      Title: '',
       City: '',
       NumberOfRooms: '',
       Area: '',
@@ -105,6 +120,10 @@ const Dashboard = () => {
       price: '',
       location: '',
       description: '',
+      floorNumber: '',
+      totalFloors: '',
+      amenities: [],
+      petFriendly: false,
       ApartmentPictures: [],
     });
   };
@@ -113,7 +132,7 @@ const Dashboard = () => {
     e.preventDefault();
 
     // 1. الـ Validation
-    if (!formData.City || !formData.NumberOfRooms || !formData.Area || !formData.View || !formData.price || !formData.location) {
+    if (!formData.Title || !formData.City || !formData.NumberOfRooms || !formData.Area || !formData.View || !formData.price || !formData.location || formData.floorNumber === '' || formData.totalFloors === '') {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -202,15 +221,13 @@ const Dashboard = () => {
         <h1 className={styles.dashboardTitle}>Owner Dashboard</h1>
       </div>
 
-      {/* Apartments Section */}
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>My Apartments</h2>
         <button className={styles.addBtn} onClick={() => handleOpenModal()}>
           + Add New Apartment
         </button>
       </div>
-      {console.log("apartments: " , apartments)}
-      {/* Apartments Grid or Empty State */}
+
       {apartments.length === 0 ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>🏠</div>
@@ -291,7 +308,7 @@ const Dashboard = () => {
 
 
       {/* Modal */}
-      <div className={`${styles.modal} ${showModal ? styles.modalActive : ''}`}>
+      {/* <div className={`${styles.modal} ${showModal ? styles.modalActive : ''}`}>
         <div className={styles.modalContent}>
           <div className={styles.modalHeader}>
             <h2 className={styles.modalTitle}>
@@ -497,7 +514,19 @@ const Dashboard = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div> */}
+
+      <Modal
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        editingId={editingId}
+        handleImageUpload={handleImageUpload}
+        removeImage={removeImage}
+        imagePreviews={imagePreviews}
+      />
     </div>
   );
 };
