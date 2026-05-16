@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
       ProfilePicture: {
         type: String,
-        default: "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png"
+        default: "https://api.dicebear.com/9.x/adventurer/svg?seed=Emery"
     }
 },{ timestamps: true });
 module.exports = mongoose.model("User", userSchema);

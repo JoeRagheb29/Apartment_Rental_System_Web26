@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const apartmentSchema = new mongoose.Schema({
+    Title: { type: String, required: true },
     City: { type: String, required: true },
     NumberOfRooms: { type: Number, required: true },
     Area: { type: Number, required: true },
