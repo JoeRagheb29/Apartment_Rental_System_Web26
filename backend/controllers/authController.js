@@ -223,29 +223,19 @@ exports.ChangeProfilePicture = async (req, res) => {
 };
 
 exports.uploadProfilePicture = async (req, res) => {
-
   try {
 
     if (!req.file) {
       return res.status(400).json({
-        message: "No image uploaded"
+        error: "No image uploaded"
       });
     }
 
-    const uploadDir = path.join(
-      __dirname,
-      "../uploads/profile"
-    );
-
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    const filename =
-      `user-${req.user.id}-${Date.now()}.jpeg`;
+    const filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
     const filepath = path.join(
-      uploadDir,
+      __dirname,
+      "../uploads/profile",
       filename
     );
 
@@ -254,34 +244,29 @@ exports.uploadProfilePicture = async (req, res) => {
       .jpeg({ quality: 80 })
       .toFile(filepath);
 
-    const imageUrl =
-      `/uploads/profile/${filename}`;
+    const imageUrl = `/uploads/profile/${filename}`;
 
-    const updatedUser = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       req.user.id,
       {
         ProfilePicture: imageUrl
       },
-      {
-        new: true
-      }
+      { new: true }
     ).select("-password");
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "Profile picture uploaded successfully",
-      image: imageUrl,
-      user: updatedUser
+      ProfilePicture: imageUrl,
+      user
     });
 
-  } catch (err) {
+  } catch (error) {
 
-    console.log(err);
+    console.log(error);
 
-    return res.status(500).json({
-      message: "Server Error",
-      error: err.message
+    res.status(500).json({
+      error: error.message
     });
 
   }
-
 };

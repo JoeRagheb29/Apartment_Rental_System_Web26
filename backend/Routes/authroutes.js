@@ -157,9 +157,9 @@ router.route("/logout")
  *         description: Bad request
  */
 router.post(
-    "/upload-profile-picture",
-    auth,
-    upload.single("image"),
-    uploadProfilePicture
+  "/upload-profile-picture",
+  auth,
+  upload.single("image"),
+  uploadProfilePicture
 );
 module.exports = router;

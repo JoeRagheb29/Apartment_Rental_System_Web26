@@ -40,10 +40,12 @@ const Profile = () => {
         // Get user profile
         const userRes = await API.get('user/profile', config);
         const fetchedUser = {
-          ...userRes.data,
-          role: userRes.data.role,
-          profilePicture: userRes.data.ProfilePicture || "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png"
-        };
+  ...userRes.data,
+  role: userRes.data.role,
+  ProfilePicture:
+    userRes.data.ProfilePicture ||
+    "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png"
+};
 
         console.log("user: ",fetchedUser);
         setUser(fetchedUser);
@@ -149,10 +151,9 @@ const Profile = () => {
 
       // Update state with new image
       const updatedUser = {
-        ...user,
-        profilePicture: imageUrl,
-        ProfilePicture: imageUrl
-      };
+  ...user,
+  ProfilePicture: imageUrl
+};
       setUser(updatedUser);
       setEditData(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -174,7 +175,11 @@ const Profile = () => {
       <div className={styles.profileHeader}>
         <div className={styles.profileCard}>
           <div className={styles.profilePictureContainer}>
-            <img src={user.profilePicture} alt={user.name} className={styles.profilePicture} />
+            <img
+  src={user.ProfilePicture}
+  alt={user.name}
+  className={styles.profilePicture}
+/>
             <div className={styles.roleTag}>{user.role.toUpperCase()}</div>
             <label htmlFor="photoUpload" className={styles.photoUploadLabel}>
               📸

@@ -41,17 +41,27 @@ const User = require('../Models/User');
  *         description: Server error
  */
 router.get('/profile', protect, async (req, res) => {
-    try {
+  try {
 
-        const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
 
-        res.json(user);
-
-    } catch (error) {
-
-        res.status(500).json({ message: "خطأ في السيرفر" });
-
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
     }
+
+    res.json(user);
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error"
+    });
+
+  }
 });
 
 
@@ -100,35 +110,42 @@ router.get('/profile', protect, async (req, res) => {
  *         description: Server error
  */
 router.put('/profile', protect, async (req, res) => {
-    try {
+  try {
 
-        const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id);
 
-        if (user) {
-
-            user.name = req.body.name || user.name;
-            user.email = req.body.email || user.email;
-
-            const updatedUser = await user.save();
-
-            res.json({
-                _id: updatedUser._id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                role: updatedUser.role || 'user',
-                profilePicture: updatedUser.profilePicture
-            });
-
-        } else {
-
-            res.status(404).json({ message: "المستخدم غير موجود" });
-
-        }
-
-    } catch (error) {
-
-        res.status(500).json({ message: "خطأ في السيرفر أثناء التحديث" });
-
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
     }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    // IMPORTANT
+    if (req.body.ProfilePicture) {
+      user.ProfilePicture = req.body.ProfilePicture;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      ProfilePicture: updatedUser.ProfilePicture
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error While Updating Profile"
+    });
+
+  }
 });
 module.exports = router;
