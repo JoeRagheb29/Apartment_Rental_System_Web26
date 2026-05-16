@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 const API = axios.create({
   baseURL: 'http://localhost:5000/',
-  timeout: 1000,
+  timeout: 10000,
 });
 
 function Register() {
