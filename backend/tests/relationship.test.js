@@ -10,6 +10,7 @@ describe("Relationship Endpoints", () => {
   let apartmentId;
 
   const apartmentData = {
+  Title: "Luxury Apartment",
   City: "Cairo",
   NumberOfRooms: 3,
   Area: 120,
