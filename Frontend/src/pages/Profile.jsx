@@ -15,20 +15,21 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
 
+  const API = axios.create({
+    baseURL: 'http://localhost:5000/api/',
+    timeout: 10000,
+  });
+
   useEffect(() => {
     const fetchProfileAndApartments = async () => {
       try {
-        // 1. هنجيب التوكن بتاع اليوزر من اللوكال ستوريدج (لازم تكون مسيفه وقت اللوجن بنفس الاسم)
         const token = localStorage.getItem('userToken'); 
         
-        // لو مفيش توكن ممكن توقعه لصفحة اللوجن هنا
         if(!token) {
-           setError("يجب تسجيل الدخول أولاً");
+           setError("You must login first");
            setLoading(false);
            return;
         }
-
-        console.log("token found from profile:", token);
 
         const config = {
           headers: {
@@ -36,61 +37,42 @@ const Profile = () => {
           }
         };
 
-        // 2. نجيب بيانات اليوزر
-        const userRes = await axios.get('http://localhost:5000/api/user/profile', config);
-
-        // بنحط داتا افتراضية لو مش موجودة في الداتابيز عشان التصميم ميبوظش
+        // Get user profile
+        const userRes = await API.get('user/profile', config);
         const fetchedUser = {
           ...userRes.data,
-          role: userRes.data.role || 'user',
-          profilePicture: userRes.data.profilePicture || "https://api.dicebear.com/9.x/adventurer/svg?seed=Emery"
+          role: userRes.data.role,
+          profilePicture: userRes.data.ProfilePicture || "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png"
         };
 
+        console.log("user: ",fetchedUser);
         setUser(fetchedUser);
-        setEditData(fetchedUser); // بنجهز الداتا جوه الفورم
-
-        // 3. نجيب بيانات الشقق بناءً على دور المستخدم
-        const apartmentsRes = await axios.get('http://localhost:5000/api/apartments', config);
-        const apartments = apartmentsRes.data;
+        setEditData(fetchedUser);
         
+        // Store updated user in localStorage
+        localStorage.setItem('user', JSON.stringify(fetchedUser));
+
+        // Get apartments based on role
         if (fetchedUser.role === 'owner') {
-          
-          const ownedApts = apartments.filter(apt => apt.owner === fetchedUser._id);
-          
-          setOwnedApartments(ownedApts);
-          // // نجيب بيانات الـ Tenants لكل شقة
-          // const enrichedApts = await Promise.all(
-          //   ownedApts.map(async (apt) => {
-          //     if (apt.tenant) {
-          //       try {
-          //         const tenantRes = await axios.get(`http://localhost:5000/api/user/${apt.tenant}`, config);
-          //         return { ...apt, tenant: tenantRes.data };
-          //       } catch {
-          //         return apt;
-          //       }
-          //     }
-          //     return apt;
-          //   })
-          // );
-          // setOwnedApartments(enrichedApts);
-          
+          const ownedApts = await API.get('apartments/profile/my-listings', config);
+          setOwnedApartments(ownedApts.data);
         } else if (fetchedUser.role === 'tenant') {
-          // إذا كان tenant - نجيب الشقة اللي هو بيستأجرها (شقة واحدة فقط)
-          const rentedApts = apartments.filter(apt => apt.tenant === fetchedUser._id);
-          if (rentedApts.length > 0) {
-            setRentedApartment(rentedApts[0]); // نأخذ أول شقة فقط
+          const rentedApts = await API.get('apartments/profile/my-rentals', config);
+          if (rentedApts.data.length > 0) {
+            setRentedApartment(rentedApts.data[0]);
           }
         }
 
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError("حدث خطأ في تحميل البيانات");
+        setError("Error loading data");
         setLoading(false);
       }
     };
 
     fetchProfileAndApartments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEditChange = (e) => {
@@ -112,24 +94,73 @@ const Profile = () => {
         }
       };
 
-      // نبعت التعديلات للباك إند
-      const response = await axios.put(
-        'http://localhost:5000/api/user/profile',
+      const response = await API.put('/user/profile',
         { name: editData.name, email: editData.email }, 
         config
       );
 
       // نحدث الـ State بالبيانات الجديدة اللي رجعت من السيرفر
-      setUser({
+      const updatedUser = {
         ...user,
         name: response.data.name,
-        email: response.data.email
-      });
+        email: response.data.email,
+      };
+      setUser(updatedUser);
+      setEditData(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
       setIsEditing(false);
       toast.success('تم تحديث البيانات بنجاح!');
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error('حدث خطأ أثناء التحديث');
+    }
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "qrvfwtm2");
+
+      // Upload to Cloudinary
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dgnzhsnna/image/upload",
+        formData
+      );
+
+      const imageUrl = res.data.secure_url;
+
+      // Update user profile with new image
+      const token = localStorage.getItem('userToken');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+
+      await API.put('/user/profile',
+        { ProfilePicture: imageUrl },
+        config
+      );
+
+      // Update state with new image
+      const updatedUser = {
+        ...user,
+        profilePicture: imageUrl,
+        ProfilePicture: imageUrl
+      };
+      setUser(updatedUser);
+      setEditData(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      toast.success('Profile picture updated successfully! ✨');
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      toast.error('Error uploading photo:');
     }
   };
 
@@ -145,6 +176,16 @@ const Profile = () => {
           <div className={styles.profilePictureContainer}>
             <img src={user.profilePicture} alt={user.name} className={styles.profilePicture} />
             <div className={styles.roleTag}>{user.role.toUpperCase()}</div>
+            <label htmlFor="photoUpload" className={styles.photoUploadLabel}>
+              📸
+            </label>
+            <input
+              id="photoUpload"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              style={{ display: 'none' }}
+            />
           </div>
 
           <div className={styles.profileInfo}>

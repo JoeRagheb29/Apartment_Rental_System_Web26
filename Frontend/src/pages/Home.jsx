@@ -19,7 +19,7 @@ function Home() {
 
   const Axios = axios.create({
     baseURL: "http://localhost:5000/",
-    timeout: 5000,
+    timeout: 10000,
   });
 
   const slides = [img1, img2, img3];
