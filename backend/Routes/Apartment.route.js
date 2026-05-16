@@ -336,30 +336,37 @@ router.post("/:id/rent", auth, role("tenant"), async (req, res) => {
         const apartment = await Apartment.findById(req.params.id);
 
         if (!apartment) {
-            return res.status(404).json("Apartment not found");
+            return res.status(404).json({
+                message: "Apartment not found"
+            });
         }
 
         if (apartment.tenant) {
-            return res.status(400).json("Already rented");
-        }
-
-        if (apartment.owner.toString() === req.user.id) {
-            return res.status(400).json("Owner cannot rent own apartment");
+            return res.status(400).json({
+                message: "Apartment already rented"
+            });
         }
 
         apartment.tenant = req.user.id;
 
         await apartment.save();
 
-        res.status(200).json(apartment);
+        const updatedApartment = await Apartment.findById(apartment._id)
+            .populate("tenant", "name email")
+            .populate("owner", "name email");
+
+        res.status(200).json({
+            message: "Apartment rented successfully",
+            apartment: updatedApartment
+        });
 
     } catch (err) {
 
+        console.error(err);
+
         res.status(500).json({
             error: err.message
-            
         });
-        console.error(err);
 
     }
 });
