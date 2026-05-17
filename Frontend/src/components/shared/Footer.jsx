@@ -86,7 +86,8 @@ const Footer = () => {
         {/* Copyright */}
         <div className={styles.copyright}>
           <p className={styles.copyrightText}>
-            &copy; 2026 ApartmentHub. All rights reserved.
+            &copy; 2026 ApartmentsHub. Developed and designed by
+            <span className={styles.authorName}> Youssef Ragheb</span>.
           </p>
         </div>
       </div>
