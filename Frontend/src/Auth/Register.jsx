@@ -9,9 +9,9 @@ import toast from 'react-hot-toast';
 // import AuthContext from '../contexts/AuthContext';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/',
-  timeout: 10000,
-});
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/',
+    timeout: 10000,
+  });
 
 function Register() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function Register() {
       console.log('User registering');
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...dataToSubmit } = values;
-      const response = await API.post('/api/auth/register', dataToSubmit);
+      const response = await API.post('/auth/register', dataToSubmit);
 
       console.log('User registered:', response.data);
       

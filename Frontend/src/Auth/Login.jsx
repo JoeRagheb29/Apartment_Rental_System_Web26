@@ -10,9 +10,11 @@ import toast from 'react-hot-toast';
 const LoginPage = () => {
   const navigate = useNavigate();
   const { handleLogin } = useContext(AuthContext);
-  
+
+  console.log(import.meta.env);
+
   const API = axios.create({
-    baseURL: 'http://localhost:5000/',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/',
     timeout: 10000,
   });
 
@@ -33,7 +35,7 @@ const LoginPage = () => {
 
 
       // respone data is just = logged innnnn (cant get user data)
-      const response = await API.post('/api/auth/login', values);
+      const response = await API.post('/auth/login', values);
       console.log("Full Response:", response.data);
 
       // Store user data and token in context and localStorage
